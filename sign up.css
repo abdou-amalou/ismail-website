@@ -137,8 +137,8 @@ form {
 .password-input input:focus,
 .confirm-password-input input:focus {
     width: 100%;
-    padding: 6px 20px;
-    margin-bottom: 7px;
+    padding: 4px 20px;
+    margin-bottom: 6px;
     background: none;
     border: none;
     outline: none;
@@ -186,23 +186,6 @@ span {
     color: #005DA9;
     font-weight: 700;
     margin-left: 10px;
-    position: relative;
-    display: inline-block;
-}
-
-span::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 1px;
-    bottom: 0;
-    left: 0;
-    background-color: #005DA9;
-    transition: width 0.3s ease;
-}
-
-span:hover::after {
-    width: 100%;
 }
 .right {
     background-image: url("sign\ up\ pictures/sign\ up\ picture.png");

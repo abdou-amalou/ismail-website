@@ -1,0 +1,13 @@
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+*.log
+.vscode/
+.gemini/
+.agent/
+.agents/
+_agent/
+_agents/
+brain/
+tmp/

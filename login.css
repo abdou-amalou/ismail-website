@@ -15,11 +15,11 @@ body {
 
 .input-svg,
 .no-eye {
-    width: 15px;
+    width: 22px;
     height: 20px;
     position: absolute;
     right: 7%;
-    bottom: 20%;
+    bottom: 30%;
     overflow: visible;
 }
 
@@ -172,23 +172,6 @@ span {
     color: #005DA9;
     font-weight: 700;
     margin-left: 10px;
-    position: relative;
-    display: inline-block;
-}
-
-span::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: #005DA9;
-    transition: width 0.3s ease;
-}
-
-span:hover::after {
-    width: 100%;
 }
 .right {
     background-image: url("sign\ up\ pictures/sign\ up\ picture.png");
@@ -251,4 +234,16 @@ input[type=number] {
     border: solid 1px #53626f9e;
     border-radius: 100px;
     font-size: 110%;
+}
+.forget-password {
+    width : 210px;
+    font-size : 70%;
+    text-align: right;
+    opacity : 65%;
+}
+.forget-link{
+    color : black;
+}
+.forget-link:hover {
+    cursor : pointer;
 }
