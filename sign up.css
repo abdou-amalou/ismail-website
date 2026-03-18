@@ -1,0 +1,253 @@
+* {
+    font-family: 'inter', sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    letter-spacing: -1px;
+}
+
+body {
+    background-color: #002448;
+    overflow-y: hidden;
+    position: relative;
+    display: flex;
+}
+
+.input-svg,
+.no-eye {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 7%;
+    bottom: 30%;
+    overflow: visible;
+}
+
+.input-svg path {
+    fill: #53626F;
+}
+
+.no-eye {
+    opacity: 60%;
+}
+
+.circle1 {
+    background-color: #00B7FF;
+    height: 740px;
+    width: 740px;
+    border-radius: 1000px;
+    filter: blur(350px);
+    position: fixed;
+    left: -180px;
+    bottom: -470px;
+    z-index: -1;
+    opacity: 68%;
+}
+
+.circle2 {
+    background-color: #7FC3FF;
+    height: 740px;
+    width: 740px;
+    border-radius: 1000px;
+    filter: blur(350px);
+    position: fixed;
+    right: -180px;
+    top: -250px;
+    z-index: -1;
+    opacity: 48%;
+}
+
+.all-the-work {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sign-up {
+    display: flex;
+    padding: 6px;
+    background-color: white;
+    border-radius : 100px;
+    justify-content: space-between;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    margin : 70px 130px;
+    align-items: center;
+    justify-content: center;
+}
+
+.heading {
+    font-size: 300%;
+    font-weight: 500;
+    letter-spacing: -5px;
+    color: #003B75;
+}
+
+.sub-heading {
+    font-size: 90%;
+    margin-top: -4px;
+    font-weight: 500;
+    margin-bottom: 40px;
+    color: #003B75;
+
+}
+
+.first-name-input,
+.last-name-input,
+.phone-number-input,
+.password-input,
+.confirm-password-input {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 80%;
+    overflow: visible;
+    margin: auto;
+}
+
+.first-name-input input,
+.last-name-input input,
+.phone-number-input input,
+.password-input input,
+.confirm-password-input input {
+    width: 100%;
+    padding: 4px 20px;
+    margin-bottom: 6px;
+    background: none;
+    border: none;
+    border: solid 1px #53626f9e;
+    border-radius: 100px;
+    font-size: 110%;
+}
+.first-name-input input:focus,
+.last-name-input input:focus,
+.phone-number-input input:focus,
+.password-input input:focus,
+.confirm-password-input input:focus {
+    width: 100%;
+    padding: 6px 20px;
+    margin-bottom: 7px;
+    background: none;
+    border: none;
+    outline: none;
+    border: solid 1px #53626f9e;
+    border-radius: 100px;
+    font-size: 110%;
+}
+
+.sign-up-button {
+    margin-top: 30px;
+    width: 85%;
+    padding: 6px;
+    color: white;
+    background-color: #005DA9;
+    border: none;
+    border-radius: 100px;
+    margin-bottom: 4px;
+    transition: all 0.5s;
+}
+
+.sign-up-button:hover {
+    margin-top: 30px;
+    width: 85%;
+    padding: 6px;
+    color: white;
+    background-color: #007add;
+    border: none;
+    border-radius: 100px;
+    margin-bottom: 4px;
+    box-shadow: 0px 0px 10px #136db6;
+    transform: scale(105%);
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+.already-have-an-account {
+    font-size: 68%;
+    color: #53626F;
+}
+
+span {
+    color: #005DA9;
+    font-weight: 700;
+    margin-left: 10px;
+    position: relative;
+    display: inline-block;
+}
+
+span::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: #005DA9;
+    transition: width 0.3s ease;
+}
+
+span:hover::after {
+    width: 100%;
+}
+.right {
+    background-image: url("sign\ up\ pictures/sign\ up\ picture.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius : 95px;
+    width : 339px;
+    position : relative;
+}
+.comment{
+    position: absolute;
+    bottom : 80px;
+    width : 60%;
+    left : 30px;
+    color : white;
+    font-weight : 500;
+    letter-spacing : -2px;
+    font-size : 27px;
+}
+
+/* Remove spin buttons from number input */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+.home{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-weight: 500;
+    letter-spacing: -2px;
+    transition : all 0.5s;
+    font-size : 20px;
+}
+.home:hover{
+    transform: scale(110%);
+    cursor: pointer;
+    color : #479de3;
+    text-shadow: 0px 0px 10px #136db6;
+}
