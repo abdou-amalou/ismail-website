@@ -29,12 +29,10 @@ body {
     border-bottom: solid rgba(255, 255, 255, 0.374) 1px;
     border-radius: 10px;
     max-width: 1205px;
-    width: 80%;
-    padding: 10px;
-    gap: 20px;
-    justify-content: space-between;
-    padding-right: 80px;
-    padding-left: 80px;
+    width: fit-content;
+    padding: 10px 40px;
+    gap: 40px;
+    justify-content: center;
     position: fixed;
     top: 20px;
     overflow: hidden;
@@ -43,6 +41,7 @@ body {
     left: 50%;
     /* Center it horizontally */
     transform: translateX(-50%);
+    transition: all 0.3s ease;
 }
 
 .nav-bar .left {
