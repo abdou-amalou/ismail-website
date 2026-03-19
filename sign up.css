@@ -31,6 +31,10 @@ body {
     opacity: 60%;
 }
 
+.toggle-password {
+    cursor: pointer;
+}
+
 .circle1 {
     background-color: #00B7FF;
     height: 740px;
@@ -101,7 +105,61 @@ form {
     font-weight: 500;
     margin-bottom: 40px;
     color: #003B75;
+}
 
+/* Google Sign-In Button */
+.google-signin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 80%;
+    padding: 8px 16px;
+    background-color: white;
+    border: 1px solid #dadce0;
+    border-radius: 100px;
+    cursor: pointer;
+    font-size: 90%;
+    font-weight: 500;
+    color: #3c4043;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.google-signin:hover {
+    background-color: #f8f9fa;
+    border-color: #c6c6c6;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.google-signin svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* OR Divider */
+.or-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 15px 0;
+    width: 80%;
+    color: #5f6368;
+}
+
+.or-divider::before,
+.or-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #dadce0;
+}
+
+.or-divider span {
+    padding: 0 12px;
+    font-size: 85%;
+    color: #5f6368;
+    font-weight: 400;
 }
 
 .first-name-input,
@@ -132,7 +190,6 @@ form {
     font-size: 110%;
 }
 
-/* Fix for browser autofill styling */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
@@ -221,7 +278,6 @@ span {
     font-size: 27px;
 }
 
-/* Remove spin buttons from number input */
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;

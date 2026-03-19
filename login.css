@@ -75,8 +75,8 @@ form {
     display: flex;
     padding: 6px;
     background-color: white;
-    border-radius : 100px;
-    height : 500px;
+    border-radius: 100px;
+    height: 500px;
     justify-content: space-between;
 }
 
@@ -84,7 +84,7 @@ form {
     display: flex;
     flex-direction: column;
     width: 30%;
-    margin : 70px 130px;
+    margin: 70px 130px;
     align-items: center;
     justify-content: center;
 }
@@ -102,7 +102,61 @@ form {
     font-weight: 500;
     margin-bottom: 40px;
     color: #003B75;
+}
 
+/* Google Sign-In Button */
+.google-signin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 80%;
+    padding: 8px 16px;
+    background-color: white;
+    border: 1px solid #dadce0;
+    border-radius: 100px;
+    cursor: pointer;
+    font-size: 90%;
+    font-weight: 500;
+    color: #3c4043;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.google-signin:hover {
+    background-color: #f8f9fa;
+    border-color: #c6c6c6;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.google-signin svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* OR Divider */
+.or-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 15px 0;
+    width: 80%;
+    color: #5f6368;
+}
+
+.or-divider::before,
+.or-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #dadce0;
+}
+
+.or-divider span {
+    padding: 0 12px;
+    font-size: 85%;
+    color: #5f6368;
+    font-weight: 400;
 }
 
 .first-name-input,
@@ -131,11 +185,8 @@ form {
     border: solid 1px #53626f9e;
     border-radius: 100px;
     font-size: 110%;
-
 }
 
-
-/* Fix for browser autofill styling */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
@@ -186,27 +237,28 @@ span {
     font-weight: 700;
     margin-left: 10px;
 }
+
 .right {
     background-image: url("sign\ up\ pictures/sign\ up\ picture.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius : 95px;
-    width : 350px;
-    position : relative;
-}
-.comment{
-    position: absolute;
-    bottom : 80px;
-    width : 60%;
-    left : 30px;
-    color : white;
-    font-weight : 500;
-    letter-spacing : -2px;
-    font-size : 27px;
+    border-radius: 95px;
+    width: 350px;
+    position: relative;
 }
 
-/* Remove spin buttons from number input */
+.comment {
+    position: absolute;
+    bottom: 80px;
+    width: 60%;
+    left: 30px;
+    color: white;
+    font-weight: 500;
+    letter-spacing: -2px;
+    font-size: 27px;
+}
+
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -217,22 +269,25 @@ input[type=number] {
     -moz-appearance: textfield;
     appearance: textfield;
 }
-.home{
+
+.home {
     position: absolute;
     top: 20px;
     left: 20px;
     color: white;
     font-weight: 500;
     letter-spacing: -2px;
-    transition : all 0.5s;
-    font-size : 20px;
+    transition: all 0.5s;
+    font-size: 20px;
 }
-.home:hover{
+
+.home:hover {
     transform: scale(110%);
     cursor: pointer;
-    color : #479de3;
+    color: #479de3;
     text-shadow: 0px 0px 10px #136db6;
 }
+
 .first-name-input input:focus,
 .last-name-input input:focus,
 .phone-number-input input:focus,
@@ -248,15 +303,18 @@ input[type=number] {
     border-radius: 100px;
     font-size: 110%;
 }
+
 .forget-password {
-    width : 210px;
-    font-size : 70%;
+    width: 210px;
+    font-size: 70%;
     text-align: right;
-    opacity : 65%;
+    opacity: 65%;
 }
-.forget-link{
-    color : black;
+
+.forget-link {
+    color: black;
 }
+
 .forget-link:hover {
-    cursor : pointer;
+    cursor: pointer;
 }

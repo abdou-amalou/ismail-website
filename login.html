@@ -17,6 +17,23 @@
                 <p class = "sub-heading">Log in to Your Account</p>
             
                 <form id="login-form">
+                    <!-- Google Sign-In Button -->
+                    <a href="https://smail-app-production.up.railway.app/api/auth/google" class="google-signin">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                            <path fill="none" d="M0 0h48v48H0z"/>
+                        </svg>
+                        Continue with Google
+                    </a>
+
+                    <!-- OR Divider -->
+                    <div class="or-divider">
+                        <span>OR</span>
+                    </div>
+
                     <div class="phone-number-input">
                         <input type="email" class = "phone" name="email" placeholder="Email" required>
                         <?xml version="1.0" encoding="UTF-8"?>
@@ -32,7 +49,7 @@
                             </svg>
                         </div>
                     </div>
-                  <p class = "forget-password">  <a class = "forget-link" href="forget-password.html">forget password ?</a></p>
+                  <p class = "forget-password"><a class = "forget-link" href="forget-password.html">forget password ?</a></p>
                     <input type="submit" value = "Log in" class = "sign-up-button">
                 </form>
                 <p class = "already-have-an-account">Don't have an account? <a href="sign up.html"><span>Sign up</span></a></p>
@@ -44,12 +61,8 @@
     </div>
 
     <script>
-        // ============================================
-        // BACKEND URL - CHANGE THIS WHEN YOU GET IT
-        // ============================================
-        const BACKEND_URL = 'https://smail-app-production.up.railway.app'; // ← PUT YOUR BACKEND URL HERE
+        const BACKEND_URL = 'https://smail-app-production.up.railway.app';
 
-        // Handle form submission
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('login-form');
             
@@ -69,19 +82,16 @@
                     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                     passwordInput.setAttribute('type', type);
                     
-                    // Clear current content
                     this.innerHTML = '';
                     
                     if (type === 'text') {
-                        // User's provided "eye" SVG
                         this.innerHTML = `
-                            <svg class="no-eye" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" width="21" height="18" fill="none">
+                            <svg class="no-eye" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="21" height="18">
                                 <path d="M11.997,7.404c-2.943,.019-4.58,1.718-4.58,4.605s1.638,4.569,4.586,4.586c2.942-.018,4.525-1.604,4.58-4.604-.051-2.938-1.677-4.568-4.586-4.587Zm.006,8.191c-2.399-.014-3.539-1.157-3.586-3.596,.046-2.438,1.186-3.581,3.58-3.596,2.339,.016,3.545,1.228,3.586,3.586-.044,2.445-1.184,3.591-3.58,3.605Z" fill="#73808B"/>
                                 <path d="M22.98,11.951c-1.634-5.618-5.427-8.613-10.97-8.662h-.009c-5.667,.047-9.362,2.942-10.981,8.603-.026,.09-.026,.185,0,.274,1.601,5.626,5.296,8.501,10.99,8.545,5.681-.044,9.372-2.899,10.971-8.483,.026-.091,.026-.187,0-.277Zm-10.971,7.76c-5.216-.041-8.485-2.553-9.989-7.681,1.503-5.093,4.862-7.697,9.985-7.741,5.081,.046,8.435,2.67,9.973,7.802-1.502,5.086-4.767,7.579-9.97,7.62Z" fill="#73808B"/>
                             </svg>
                         `;
                     } else {
-                        // Original "no-eye" SVG
                         this.innerHTML = `
                             <svg class="no-eye" width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M10.5383 4.44354C7.71796 4.46175 6.14917 6.08996 6.14917 8.85667C6.14917 11.6234 7.71892 13.2353 10.5441 13.2516C13.3635 13.2343 14.8805 11.7144 14.9333 8.83942C14.8844 6.02383 13.3261 4.46175 10.5383 4.44354ZM10.5441 12.2933C8.24505 12.2798 7.15254 11.1845 7.1075 8.84708C7.15159 6.51067 8.24409 5.41529 10.5383 5.40092C12.7799 5.41625 13.9356 6.57775 13.9749 8.8375C13.9328 11.1806 12.8403 12.2798 10.5441 12.2933Z" fill="#73808B"/>
@@ -94,26 +104,22 @@
             }
 
             form.addEventListener('submit', async function(e) {
-                e.preventDefault(); // Prevent page reload
+                e.preventDefault();
 
-                // Get form values
                 const email = document.querySelector('input[name="email"]').value.trim();
                 const password = document.querySelector('input[name="password"]').value;
 
-                // Validation
                 if (!email || !password) {
                     alert('Email and password are required!');
                     return;
                 }
 
-                // Validate email format
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailPattern.test(email)) {
                     alert('Please enter a valid email address!');
                     return;
                 }
 
-                // Show loading state
                 const submitBtn = document.querySelector('.sign-up-button');
                 const originalValue = submitBtn.value;
                 submitBtn.value = 'Logging in...';
@@ -122,7 +128,6 @@
                 try {
                     console.log('Sending login request...');
                     
-                    // Send request to backend
                     const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
                         method: 'POST',
                         headers: {
@@ -138,33 +143,27 @@
                     console.log('Response:', data);
 
                     if (!response.ok) {
-                        // Handle specific error messages
                         if (data.message === "Ce compte utilise Google. Connectez-vous avec Google.") {
                             throw new Error('This account uses Google Sign-In. Please use Google to log in.');
                         }
                         throw new Error(data.message || 'Login failed');
                     }
 
-                    // SUCCESS!
                     console.log('Login successful!');
                     
-                    // Store the token in localStorage
                     localStorage.setItem('token', data.token);
                     console.log('Token saved to localStorage');
 
                     alert('Login successful! Redirecting...');
                     
-                    // Redirect to profile/dashboard page after 1 second
                     setTimeout(() => {
-                        window.location.href = 'index.html'; // Change to your dashboard/profile page
+                        window.location.href = 'index.html';
                     }, 1000);
 
                 } catch (error) {
-                    // Handle errors
                     console.error('Login error:', error);
                     alert(error.message || 'Failed to log in. Please try again.');
                     
-                    // Reset button
                     submitBtn.value = originalValue;
                     submitBtn.disabled = false;
                 }
