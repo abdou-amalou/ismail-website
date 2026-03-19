@@ -1739,8 +1739,19 @@ html {
         font-weight: 560;
         flex-wrap: wrap;
     }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .third,
+    .fourth,
+    .third:hover,
+    .fourth:hover {
+        margin-top: 0;
+    }
     .grids-purchase {
-        border : solid green 3px;
         display: flex;
         width: 80%;
         max-width: 1250px;
