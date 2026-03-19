@@ -123,7 +123,7 @@ form {
 .password-input input,
 .confirm-password-input input {
     width: 100%;
-    padding: 4px 20px;
+    padding: 10px 45px 10px 20px;
     margin-bottom: 6px;
     background: none;
     border: none;
@@ -131,13 +131,24 @@ form {
     border-radius: 100px;
     font-size: 110%;
 }
+
+/* Fix for browser autofill styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #003B75;
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+    transition: background-color 5000s ease-in-out 0s;
+    font-family: 'inter', sans-serif !important;
+    font-size: 110% !important;
+}
 .first-name-input input:focus,
 .last-name-input input:focus,
 .phone-number-input input:focus,
 .password-input input:focus,
 .confirm-password-input input:focus {
     width: 100%;
-    padding: 4px 20px;
+    padding: 10px 45px 10px 20px;
     margin-bottom: 6px;
     background: none;
     border: none;

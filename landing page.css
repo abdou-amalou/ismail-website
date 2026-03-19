@@ -1606,6 +1606,9 @@ textarea:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0px 1000px #050A0D inset !important;
     -webkit-text-fill-color: #004B81 !important;
     transition: background-color 5000s ease-in-out 0s;
+    font-family: 'inter', sans-serif !important;
+    font-size: 140% !important;
+    font-weight: 800 !important;
 }
 
 /* Custom Webkit Scrollbar for the Message textarea */
