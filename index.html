@@ -654,5 +654,57 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="contact-form.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const token = localStorage.getItem('token');
+            
+            const navLeft = document.querySelector('.nav-bar .left');
+            const navRight = document.querySelector('.nav-bar .right');
+            
+            if (token) {
+                // USER IS LOGGED IN
+                console.log('User is logged in');
+                
+                // Hide Sign Up and Log In buttons
+                if (navRight) {
+                    navRight.style.display = 'none';
+                }
+                
+                // Show profile picture and username
+                if (navLeft) {
+                    navLeft.style.display = 'flex';
+                }
+                
+                // Optional: Update username from stored user data
+                const userData = localStorage.getItem('userData');
+                if (userData) {
+                    try {
+                        const user = JSON.parse(userData);
+                        const usernameElement = document.querySelector('.nav-bar .username');
+                        if (usernameElement && user.username) {
+                            usernameElement.textContent = user.username;
+                        }
+                    } catch (error) {
+                        console.error('Error parsing user data:', error);
+                    }
+                }
+                
+            } else {
+                // USER IS NOT LOGGED IN
+                console.log('User is not logged in');
+                
+                // Hide profile picture and username
+                if (navLeft) {
+                    navLeft.style.display = 'none';
+                }
+                
+                // Show Sign Up and Log In buttons
+                if (navRight) {
+                    navRight.style.display = 'flex';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
