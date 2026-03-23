@@ -130,7 +130,7 @@ form {
 .google-signin:hover {
     background-color: #f8f9fa;
     border-color: #c6c6c6;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .google-signin svg {
@@ -309,4 +309,23 @@ input[type=number] {
 
 #email-svg {
     opacity: 60%;
+}
+
+@media (max-width:1324px) {
+    .right {
+        display: none;
+        width: 0px;
+    }
+    .all-the-work{
+        
+    }
+    .left {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin: 0px 0px;
+        padding : 80px;
+        align-items: center;
+        justify-content: center;
+    }
 }

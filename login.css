@@ -318,3 +318,21 @@ input[type=number] {
 .forget-link:hover {
     cursor: pointer;
 }
+@media (max-width:1324px) {
+    .right {
+        display: none;
+        width: 0px;
+    }
+    .all-the-work{
+        
+    }
+    .left {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin: 0px 0px;
+        padding : 80px;
+        align-items: center;
+        justify-content: center;
+    }
+}
