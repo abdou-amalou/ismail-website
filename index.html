@@ -672,7 +672,7 @@
                 
                 // Fetch username from backend
                 fetch(`${BACKEND_URL}/api/auth/me`, {
-                    method: 'GET',
+                    method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
