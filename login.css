@@ -323,16 +323,23 @@ input[type=number] {
         display: none;
         width: 0px;
     }
-    .all-the-work{
-        
-    }
+
+    .all-the-work {}
+
     .left {
         display: flex;
         flex-direction: column;
         width: 100%;
         margin: 0px 0px;
-        padding : 80px;
+        padding: 50px;
         align-items: center;
         justify-content: center;
+    }
+
+    .sign-up {
+        display: flex;
+        background-color: white;
+        border-radius: 55px;
+        justify-content: space-between;
     }
 }
