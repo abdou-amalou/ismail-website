@@ -2231,6 +2231,82 @@ html {
         width: 100%;
     }
 
+    .contact-section {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 30px;
+        background-color: #050A0D;
+        color: #004373;
+        justify-content: center;
+    }
+
+    .contact-section .left {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .contact-section .left p {
+        font-size: 710%;
+        font-weight: 900;
+        letter-spacing: -5px;
+    }
+
+    #alone {
+        border: none;
+        color: #96CAFF;
+        background-color: #004373;
+        width: 140px;
+        padding: 8px;
+        text-align: center;
+        border-radius: 200px;
+        margin-top: 30px;
+        font-size: 130%;
+        font-weight: 400;
+        transition: all 0.5s;
+    }
+
+    #alone:hover {
+        border: none;
+        color: #e9f4ff;
+        background-color: #0062a7;
+        width: 140px;
+        padding: 8px;
+        text-align: center;
+        border-radius: 200px;
+        margin-top: 30px;
+        font-size: 130%;
+        font-weight: 400;
+        transform: scale(108%);
+        box-shadow: 0px 0px 15px #1374c345;
+        cursor: pointer;
+    }
+
+    input,
+    textarea {
+        background: none;
+        padding: 25px;
+        border: none;
+        border-bottom: #004B81 solid 2px;
+        position: relative;
+        color: #004B81;
+        font-size: 140%;
+        font-weight: 800;
+        text-align: left;
+        padding-left: 4px;
+        width: 140%;
+    }
+
+    .contact-section .right {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        margin-top : 50px;
+        width: 160%;
+        max-width: 590px;
+    }
 }
 
 @media (max-width:1024px) {
@@ -2369,6 +2445,7 @@ html {
         overflow: visible;
         padding: 7px;
     }
+
     a .button:hover p {
         font-weight: 800;
         font-size: 80%;
