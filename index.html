@@ -7,6 +7,7 @@
     <title>Ismail Hamani - Video Editing Masterclass</title>
     <link rel="icon" type="png" href="favicon/landing page favicon.png">
     <link rel="stylesheet" href="landing page.css">
+    <link rel="stylesheet" href="notifications.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
 </head>
 
@@ -179,7 +180,7 @@
         <div class="nav-bar">
             <div class="left">
                 <img src="landing-page-pictures/ismail hamani profile picture.jpeg" class="profile-picture">
-                <p class="username">User Name</p>
+                <p class="username"></p>
             </div>
             <div class="middle">
                 <a href="#home">Home</a>
@@ -602,7 +603,7 @@
         <div class="contact-section" id = "contact">
             <div class="left">
                 <p>Contact</p>
-                <form id="contact-form">
+                <form id="contact-form" novalidate>
                     <input type="text" name="user_name" placeholder="Full Name" required>
                     <input type="email" name="user_email" placeholder="Email" required>
                     <textarea name="message" placeholder="Message" id="message" required></textarea>
@@ -653,56 +654,62 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="notifications.js"></script>
     <script src="contact-form.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is logged in
+            const BACKEND_URL = 'https://smail-app-production.up.railway.app';
             const token = localStorage.getItem('token');
             
             const navLeft = document.querySelector('.nav-bar .left');
             const navRight = document.querySelector('.nav-bar .right');
+            const usernameElement = document.querySelector('.nav-bar .username');
             
             if (token) {
                 // USER IS LOGGED IN
-                console.log('User is logged in');
+                if (navRight) navRight.style.display = 'none';
+                if (navLeft) navLeft.style.display = 'flex';
                 
-                // Hide Sign Up and Log In buttons
-                if (navRight) {
-                    navRight.style.display = 'none';
-                }
-                
-                // Show profile picture and username
-                if (navLeft) {
-                    navLeft.style.display = 'flex';
-                }
-                
-                // Optional: Update username from stored user data
-                const userData = localStorage.getItem('userData');
-                if (userData) {
-                    try {
-                        const user = JSON.parse(userData);
-                        const usernameElement = document.querySelector('.nav-bar .username');
-                        if (usernameElement && user.username) {
-                            usernameElement.textContent = user.username;
-                        }
-                    } catch (error) {
-                        console.error('Error parsing user data:', error);
+                // Fetch username from backend
+                fetch(`${BACKEND_URL}/api/auth/me`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
                     }
-                }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            localStorage.removeItem('token');
+                            location.reload();
+                        }
+                        throw new Error('Failed to fetch user data');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (usernameElement && data.username) {
+                        usernameElement.textContent = data.username;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching username:', error);
+                    // Fallback to localStorage if available
+                    const userData = localStorage.getItem('userData');
+                    if (userData) {
+                        try {
+                            const user = JSON.parse(userData);
+                            if (usernameElement && user.username) {
+                                usernameElement.textContent = user.username;
+                            }
+                        } catch (e) {}
+                    }
+                });
                 
             } else {
                 // USER IS NOT LOGGED IN
-                console.log('User is not logged in');
-                
-                // Hide profile picture and username
-                if (navLeft) {
-                    navLeft.style.display = 'none';
-                }
-                
-                // Show Sign Up and Log In buttons
-                if (navRight) {
-                    navRight.style.display = 'flex';
-                }
+                if (navLeft) navLeft.style.display = 'none';
+                if (navRight) navRight.style.display = 'flex';
             }
         });
     </script>

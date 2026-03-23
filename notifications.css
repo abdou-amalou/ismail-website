@@ -1,0 +1,128 @@
+/* Notification System Styles */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.notification {
+    pointer-events: auto;
+    min-width: 320px;
+    max-width: 450px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #003B75;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.4s ease;
+    border-left: 5px solid #005DA9;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    border-left-color: #34A853;
+}
+
+.notification.error {
+    border-left-color: #EA4335;
+}
+
+.notification.info {
+    border-left-color: #00B7FF;
+}
+
+.notification-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+}
+
+.notification-message {
+    flex-grow: 1;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.notification-close {
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    font-size: 18px;
+    padding: 4px;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+.notification-ok {
+    padding: 6px 16px;
+    border-radius: 8px;
+    background: #005DA9;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    outline: none;
+    margin-right: -4px;
+}
+
+.notification-ok:hover {
+    background: #007add;
+    transform: scale(1.05);
+}
+
+.notification-ok:active {
+    transform: scale(0.95);
+}
+
+.success .notification-ok { background: #34A853; }
+.success .notification-ok:hover { background: #2d9247; }
+
+.error .notification-ok { background: #EA4335; }
+.error .notification-ok:hover { background: #d3382b; }
+
+.info .notification-ok { background: #00B7FF; }
+.info .notification-ok:hover { background: #0099dd; }
+
+/* Animations */
+@keyframes slideIn {
+    from { transform: translateX(120%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateY(-20px); }
+}
+
+.notification.hide {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+}

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up and get started</title>
     <link rel="stylesheet" href="sign up.css">
+    <link rel="stylesheet" href="notifications.css">
 </head>
 
 <body>
@@ -21,7 +22,7 @@
                 <p class="heading">Welcome!</p>
                 <p class="sub-heading">Let's Get You Started Now</p>
 
-                <form id="signup-form">
+                <form id="signup-form" novalidate>
                     <!-- Google Sign-In Button -->
                     <a href="https://smail-app-production.up.railway.app/api/auth/google" class="google-signin">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
@@ -102,6 +103,7 @@
         </div>
     </div>
 
+    <script src="notifications.js"></script>
     <script>
         const BACKEND_URL = 'https://smail-app-production.up.railway.app';
 
@@ -157,23 +159,23 @@
                 const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
 
                 if (!username || !email || !password || !confirmPassword) {
-                    alert('All fields are required!');
+                    showNotification('All fields are required!', 'error');
                     return;
                 }
 
                 if (password.length < 8) {
-                    alert('Password must be at least 8 characters long!');
+                    showNotification('Password must be at least 8 characters long!', 'error');
                     return;
                 }
 
                 if (password !== confirmPassword) {
-                    alert('Passwords do not match!');
+                    showNotification('Passwords do not match!', 'error');
                     return;
                 }
 
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailPattern.test(email)) {
-                    alert('Please enter a valid email address!');
+                    showNotification('Please enter a valid email address!', 'error');
                     return;
                 }
 
@@ -205,7 +207,7 @@
                     }
 
                     console.log('Account created successfully!');
-                    alert('Account created successfully! Redirecting to login...');
+                    showNotification('Account created successfully! Redirecting to login...', 'success');
 
                     setTimeout(() => {
                         window.location.href = 'login.html';
@@ -213,7 +215,7 @@
 
                 } catch (error) {
                     console.error('Registration error:', error);
-                    alert(error.message || 'Failed to create account. Please try again.');
+                    showNotification(error.message || 'Failed to create account. Please try again.', 'error');
 
                     submitBtn.value = originalValue;
                     submitBtn.disabled = false;

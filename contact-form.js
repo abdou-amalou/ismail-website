@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(function(response) {
             // SUCCESS!
             console.log('Email sent successfully!', response);
-            alert('Message sent successfully! You will get back to them soon.');
+            showNotification('Message sent successfully! You will get back to them soon.', 'success');
             form.reset(); // Clear the form
             submitBtn.value = originalValue;
             submitBtn.disabled = false;
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(function(error) {
             // ERROR
             console.error('Failed to send email:', error);
-            alert('Failed to send message. Please try again.');
+            showNotification('Failed to send message. Please try again.', 'error');
             submitBtn.value = originalValue;
             submitBtn.disabled = false;
         });

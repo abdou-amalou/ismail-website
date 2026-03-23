@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logging in...</title>
+    <link rel="stylesheet" href="notifications.css">
     <style>
         body {
             margin: 0;
@@ -49,6 +50,7 @@
         <p>Please wait a moment</p>
     </div>
 
+    <script src="notifications.js"></script>
     <script>
         // Extract token from URL
         const params = new URLSearchParams(window.location.search);
@@ -65,8 +67,10 @@
             }, 1000);
         } else {
             // No token found - redirect to login
-            alert('Authentication failed. Please try again.');
-            window.location.href = 'login.html';
+            showNotification('Authentication failed. Please try again.', 'error');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
         }
     </script>
 </body>

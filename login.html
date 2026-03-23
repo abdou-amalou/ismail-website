@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log in , Welcome back</title>
     <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="notifications.css">
 </head>
 
 <body>
@@ -21,7 +22,7 @@
                 <p class="heading">Welcome Back!</p>
                 <p class="sub-heading">Log in to Your Account</p>
 
-                <form id="login-form">
+                <form id="login-form" novalidate>
                     <!-- Google Sign-In Button -->
                     <a href="https://smail-app-production.up.railway.app/api/auth/google" class="google-signin">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
@@ -81,6 +82,7 @@
         </div>
     </div>
 
+    <script src="notifications.js"></script>
     <script>
         const BACKEND_URL = 'https://smail-app-production.up.railway.app';
 
@@ -131,13 +133,13 @@
                 const password = document.querySelector('input[name="password"]').value;
 
                 if (!email || !password) {
-                    alert('Email and password are required!');
+                    showNotification('Email and password are required!', 'error');
                     return;
                 }
 
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailPattern.test(email)) {
-                    alert('Please enter a valid email address!');
+                    showNotification('Please enter a valid email address!', 'error');
                     return;
                 }
 
@@ -175,7 +177,7 @@
                     localStorage.setItem('token', data.token);
                     console.log('Token saved to localStorage');
 
-                    alert('Login successful! Redirecting...');
+                    showNotification('Login successful! Redirecting...', 'success');
 
                     setTimeout(() => {
                         window.location.href = 'index.html';
@@ -183,7 +185,7 @@
 
                 } catch (error) {
                     console.error('Login error:', error);
-                    alert(error.message || 'Failed to log in. Please try again.');
+                    showNotification(error.message || 'Failed to log in. Please try again.', 'error');
 
                     submitBtn.value = originalValue;
                     submitBtn.disabled = false;
