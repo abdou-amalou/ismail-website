@@ -671,7 +671,7 @@
                 if (navLeft) navLeft.style.display = 'flex';
                 
                 // Fetch username from backend
-                fetch(`${BACKEND_URL}/api/auth/me`, {
+                fetch(`${BACKEND_URL}/api/username/me`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`
