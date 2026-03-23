@@ -2459,6 +2459,6 @@ html {
 @media (max-width: 600px) {
     body {
         max-width: 600px;
-        overflow: hidden;
+        overflow-x: hidden;
     }
 }
