@@ -2248,7 +2248,7 @@ html {
     }
 
     .contact-section .left p {
-        font-size: 710%;
+        font-size: 610%;
         font-weight: 900;
         letter-spacing: -5px;
     }
@@ -2295,7 +2295,7 @@ html {
         font-weight: 800;
         text-align: left;
         padding-left: 4px;
-        width: 100%;
+        width: 110%;
     }
 
     .contact-section .right {
@@ -2304,7 +2304,7 @@ html {
         justify-content: flex-start;
         align-items: flex-start;
         margin-top : 50px;
-        width: 100%;
+        width: 190%;
         max-width: 590px;
     }
 }
