@@ -2455,8 +2455,10 @@ html {
         fill: #2b68a9;
     }
 }
+
 @media (max-width: 600px) {
-  body{
-    max-width: 600px;
-  }
+    body {
+        max-width: 600px;
+        overflow: hidden;
+    }
 }
