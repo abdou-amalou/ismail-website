@@ -2295,7 +2295,7 @@ html {
         font-weight: 800;
         text-align: left;
         padding-left: 4px;
-        width: 140%;
+        width: 100%;
     }
 
     .contact-section .right {
@@ -2304,7 +2304,7 @@ html {
         justify-content: flex-start;
         align-items: flex-start;
         margin-top : 50px;
-        width: 160%;
+        width: 100%;
         max-width: 590px;
     }
 }
@@ -2457,8 +2457,22 @@ html {
 }
 
 @media (max-width: 600px) {
+    html,
     body {
-        max-width: 600px;
+        width: 100%;
+        max-width: 100vw;
         overflow-x: hidden;
+        position: relative;
+    }
+
+    .landing-page {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .bullets,
+    .bullets-puchase {
+        max-width: 100%;
+        height: auto;
     }
 }
