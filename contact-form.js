@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show loading state
         submitBtn.value = 'Sending...';
         submitBtn.disabled = true;
-        
+      
         // Send email using EmailJS
         emailjs.sendForm(
             'service_3he3dko',    // Your Service ID
