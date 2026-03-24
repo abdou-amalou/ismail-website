@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Payement</title>
+    <link rel="stylesheet" href="baridi-infos.css">
+</head>
+
+<body>
+    <div class="all-the-work">
+        <div class="header">
+            <p>Complete Your Payement</p>
+        </div>
+        <div class="steps">
+            <div class="three-first-steps">
+                <div class="step">
+                    <div class="up">
+                        <p>Send Payement To</p>
+                        <p class="number">1</p>
+                    </div>
+                    <div class="middle">
+                        <p>Baridi RIP</p>
+                        <p>00799999004276103489</p>
+                        <button id="copy-btn" onclick="copyText()">Copy</button>
+
+                        <script>
+                            function copyText() {
+                                const btn = document.getElementById('copy-btn');
+                                const textToCopy = "00799999004276103489";
+
+                                navigator.clipboard.writeText(textToCopy)
+                                    .then(() => {
+                                        btn.innerText = "Copied!";
+                                        btn.style.cursor = "default";
+                                    })
+                                    .catch(err => {
+                                        console.error("Failed to copy: ", err);
+                                    });
+                            }
+
+                            document.getElementById('copy-btn').addEventListener('mouseleave', function() {
+                                this.innerText = "Copy";
+                                this.style.cursor = "";
+                            });
+                        </script>
+                    </div>
+                    <div class="down">
+                        <p>Amount</p>
+                        <p>8500 DZD</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="up">
+                        <p>Take a screenshot</p>
+                        <p class="number">2</p>
+                    </div>
+                    <div class="down">
+                        <p>After the transaction is successful, capture a clear screenshot showing the payment confirmation and transaction details</p>
+                    </div>
+                </div>
+                <div class="step" id = "step3">
+                    <div class="up">
+                        <p>Send the proof</p>
+                        <p class="number">3</p>
+                    </div>
+                    <div class="left-and-right">
+                        <div class="left">
+                            <p>After the transaction is successful, capture a clear screenshot showing the payment confirmation and transaction details</p>
+                        </div>
+                        <div class="right">
+                            <a href="https://wa.me/213792213138" target = "_blank"><img src="baridi infos/whatsapp image.png" alt="whatsapp"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fourth-step">
+                <div class="step">
+                    <div class="up">
+                        <p>Account Activation</p>
+                        <p class="number">4</p>
+                    </div>
+                    <div class="down">
+                        <p>Once Ismail confirms your payment, your account will be activated instantly and you'll have full access to all course videos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="index.html" class = "ahome"><p>Home</p></a>
+    </div>
+</body>
+
+</html>

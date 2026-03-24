@@ -1,0 +1,120 @@
+* {
+    font-family: 'inter', sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    letter-spacing: -1px;
+}
+
+body {
+    background-color: #002448;
+    overflow-y: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap : 50px;
+    height : 100vh;
+    width : 100%;
+}
+.circle1 {
+    background-color: #00B7FF;
+    height: 740px;
+    width: 740px;
+    border-radius: 1000px;
+    filter: blur(350px);
+    position: fixed;
+    left: -180px;
+    bottom: -470px;
+    z-index: -1;
+    opacity: 68%;
+}
+
+.circle2 {
+    background-color: #7FC3FF;
+    height: 740px;
+    width: 740px;
+    border-radius: 1000px;
+    filter: blur(350px);
+    position: fixed;
+    right: -180px;
+    top: -250px;
+    z-index: -1;
+    opacity: 48%;
+}
+.bullet-svg{
+    width : 15px;
+    height : 15px;
+}
+.bullet-svg path{
+    fill : #8FB2D0;
+}
+img{
+    width : 329px;
+    border-radius: 13px;
+}
+.course-info{
+    display: flex;
+    justify-content: space-between;
+    padding : 7px;
+    background-color : #004F8F;
+    border-radius: 15px;
+    width : 55%;
+    max-width : 850px;
+    transition: all 0.5s;
+    flex-wrap: wrap;
+}
+.left{
+    padding : 20px;
+}
+.header{
+    color : #8FB2D0;
+    font-size : 150%;
+    font-weight: 500;
+}
+hr{
+    border : solid 1px #8FB2D0;
+    margin-top : 20px;
+}
+.course-point{
+    display: flex;
+    gap : 10px;
+    color : #8FB2D0;
+    font-weight: 600;
+}
+.course-bullets{
+    margin-top : 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height : 8.4%;
+}
+.course-info:hover{
+    display: flex;
+    justify-content: space-between;
+    padding : 7px;
+    background-color : #005eab;
+    box-shadow: 0 0 10px #00529594;
+    border-radius: 15px;
+    width : 55%;
+    cursor: default;
+    transform: scale(101%);
+}
+a{
+    text-decoration: none;
+    color : #d9e4ed;
+    background-color: #0068be;
+    padding : 8px 25px;
+    border-radius: 500px;
+    transition: all 0.5s;
+}
+a:hover{
+    text-decoration: none;
+    color : #d9e4ed;
+    background-color: #006fca;
+    box-shadow: 0 0 10px #005295be;
+    padding : 8px 25px;
+    border-radius: 500px;
+    transform: scale(106%);
+}

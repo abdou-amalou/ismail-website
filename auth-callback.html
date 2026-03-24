@@ -63,13 +63,13 @@
             
             // Redirect to landing page after 1 second
             setTimeout(() => {
-                window.location.href = 'index.html';
+                window.location.href = 'course-informations.html';
             }, 1000);
         } else {
             // No token found - redirect to login
             showNotification('Authentication failed. Please try again.', 'error');
             setTimeout(() => {
-                window.location.href = 'login.html';
+                window.location.href = 'course-informations.html';
             }, 2000);
         }
     </script>

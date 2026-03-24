@@ -1,0 +1,173 @@
+* {
+    font-family: 'inter', sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    letter-spacing: -1px;
+}
+
+body {
+    background-color: #002448;
+    overflow-y: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap : 50px;
+    height : 100vh;
+    width : 100%;
+}
+.all-the-work{
+    display: flex;
+    flex-direction: column;
+    gap : 20px;
+    justify-content: center;
+    background-image: url("baridi infos/dotted lines.png"),linear-gradient(to bottom, #010101, #13467B);
+    padding : 30px;
+    border-radius: 15px;
+    width : 90%;
+    max-width : 1380px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: none;
+    color : #CAE5FB;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.691);
+}
+.header p{
+    font-size : 300%;
+    font-weight: 500;
+    letter-spacing: -3px;
+    margin-bottom : 20px;
+}
+.steps{
+    display: flex;
+    flex-direction: column;
+    gap : 40px;
+    align-items: center;
+    justify-content: center;
+    width : 100%;
+}
+.three-first-steps{
+    display: flex;
+    flex-direction: row;
+    gap : 40px;
+    width : 100%;
+    justify-content: center;
+}
+.step{
+    display: flex;
+    flex-direction: column;
+    width : 33%;
+    background-color: #13467B;
+    padding : 20px;
+    border-radius: 14px;
+    justify-content: space-between;
+    transition: all 0.3s;
+    
+}
+.up{
+    display: flex;
+    flex-direction: row;
+    gap : 10px;
+    justify-content: space-between;
+    align-items: center;
+    width : 100%;
+}
+.up p{
+    font-size : 150%;
+    font-weight: 500;
+}
+.number{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #010101;
+    height : 41px;
+    width : 41px;
+    text-align: center;
+    border-radius: 300px;
+}
+.middle {
+    display: flex;
+    width : 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+button{
+    color :#002448;
+    padding : 3px 10px;
+    background-color: #CAE5FB;
+    outline: none;
+    border : none;
+    border-radius: 300px;
+    font-weight: 700;
+    transition: all 0.3s;
+}
+button:hover{
+    color :#003264;
+    padding : 3px 10px;
+    background-color: #def2ff;
+    box-shadow: 0px 0px 10px #ffffff53;
+    outline: none;
+    border : none;
+    border-radius: 300px;
+    font-weight: 700;
+    cursor : pointer;
+}
+.down{
+    width : 100%;
+    display: flex;
+    justify-content: space-between;
+
+}
+.left-and-right{
+    display: flex;
+    flex-direction: row;
+    width : 100%;
+    justify-content: space-between;
+}
+.left{
+    width : 75%;
+}
+#step3{
+    gap : 30px;
+}
+.fourth-step{
+    width : 100%;
+    display: flex;
+    justify-content: center;
+    height : 180px;
+}
+.ahome {
+    text-decoration: none;
+    margin: auto;
+    color :#002448;
+    background-color: #CAE5FB;
+    padding : 3px 10px;
+    border-radius: 300px;
+    font-weight: 700;
+    transition: all 0.3s;
+}
+.ahome:hover{
+    color :#003264;
+    padding : 3px 10px;
+    background-color: #def2ff;
+    box-shadow: 0px 0px 10px #ffffff53;
+    outline: none;
+    border : none;
+    border-radius: 300px;
+    font-weight: 700;
+    cursor : pointer;
+}
+.step:hover{
+    display: flex;
+    flex-direction: column;
+    width : 33%;
+    background-color: #0b4d93;
+    box-shadow: 0px 0px 10px #0179dc53;
+    padding : 20px;
+    border-radius: 14px;
+    justify-content: space-between;
+    transform: scale(102%);
+}
