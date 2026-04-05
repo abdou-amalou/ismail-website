@@ -1,0 +1,176 @@
+*{
+    box-sizing : border-box;
+    padding : 0px;
+    margin : 0px;
+    font-family : 'inter',sans-serif;
+    letter-spacing : -1px;
+}
+body {
+    padding : 20px 0px;
+    display : flex;
+    flex-direction : column;
+    align-items : center;
+    justify-content:center;
+    background-image: url("course-chapters-pictures/dotted-lines.png"), linear-gradient(to bottom, #010101, #13467B);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.header{
+    color : white;
+    font-size : 250%;
+    font-weight:600;
+    letter-spacing:-3px;
+    text-align: center;
+}
+.sub-header{
+    color : white;
+    font-size : 100%;
+    font-weight:400;
+    letter-spacing:-1px;
+    margin-top:1px;
+    text-align: center;
+}
+.all-progress-bar{
+    margin-top : 20px;
+    height : 3px;
+    width : 400px;
+    border-radius : 300px;
+    background-color : #AFD9F0;
+    position : relative;
+    overflow : hidden;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,0.22);
+}
+.all-progress-bar::before{
+    content : "";
+    position : absolute;
+    left : 0;
+    top : 0;
+    height : 100%;
+    width : 50%;
+    background-color : #0070B5;
+    border-radius : 300px;
+}
+.percentage-of-progress{
+    color : white;
+    font-size : 80%;
+    margin-top : 5px;
+    font-weight : 600;
+    opacity : 80%;
+    margin-bottom : 10px;
+}
+.chapters{
+    display: flex;
+    flex-direction : column;
+    gap : 30px;
+    color : #C6E5FF;
+    width : 100%;
+    align-items: center;
+    justify-content: center;
+}
+.chapter{
+    display: flex;
+    flex-direction : column;
+    width : 65%;
+    padding : 15px;
+    backdrop-filter: blur(3px);
+    border-top: solid rgba(255, 255, 255, 0.374) 1px;
+    border-bottom: solid rgba(255, 255, 255, 0.374) 1px;
+    border-radius : 12px;
+    background-color: #0082ec1b;
+    gap : 4px;
+}
+.title-and-number{
+    display:flex;
+    width : 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.chapter-title{
+    font-size : 140%;
+    font-weight:500;
+}
+.number{
+    font-size : 120%;
+    font-weight:400;
+    opacity : 80%;
+    padding : 6px;
+    background-color: #afdbff23;
+    width : 36px;
+    text-align: center;
+    height : 36px;
+    border-radius: 6px;
+    border-top: solid rgba(255, 255, 255, 0.374) 1px;
+    border-bottom: solid rgba(255, 255, 255, 0.374) 1px;
+    backdrop-filter: blur(3px);
+}
+.lessons-and-duration{
+    display : flex;
+    width : 100%;
+    gap : 20px;
+}
+.lessons , .duration{
+    font-size : 80%;
+    opacity : 70%;
+}
+.chapter-progress{
+    display : flex;
+    width : 100%;
+    gap : 20px;
+    align-items: center;
+}
+.chapter-progress-bar{
+    height : 11px;
+    width : 240px;
+    height : 3px;
+    border-radius : 300px;
+    background-color : #AFD9F0;
+    position : relative;
+    overflow : hidden;
+}
+.chapter-progress-bar::before{
+    content : "";
+    position : absolute;
+    left : 0;
+    top : 0;
+    height : 100%;
+    width : 50%;
+    background-color : #0070B5;
+    border-radius : 300px;
+}
+a{
+    text-decoration : none;
+    color : white;
+}
+.home-button{
+    margin-top : 20px;
+    padding : 6px 25px;
+    background-color: #009dff31;
+    backdrop-filter : blur(2px);
+    border-radius : 20px;
+    border-top: solid rgba(255, 255, 255, 0.186) 1px;
+    border-bottom: solid rgba(255, 255, 255, 0.186) 1px;
+    transition : all 0.5s;
+}
+.home-button:hover{
+    background-color: #009dff5c;
+    border-top: solid rgba(255, 255, 255, 0.186) 1px;
+    border-bottom: solid rgba(255, 255, 255, 0.186) 1px;
+    transform : scale(104%);
+    box-shadow: 0px 0px 10px #009dff25;
+}
+@media (max-width : 1000px){
+    body{
+        padding : 20px 15px;
+        display : flex;
+        flex-direction : column;
+        align-items : center;
+        justify-content:center;
+        overflow-y:visible;
+        height: auto;
+        background-image: url("course-chapters-pictures/dotted-lines.png"), linear-gradient(to bottom, #010101, #13467B);
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+}

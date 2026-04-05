@@ -178,7 +178,7 @@
 
 
         <div class="nav-bar">
-            <div class="left">
+            <div class="left" id="profile-menu-trigger" role="button" tabindex="0" aria-haspopup="menu" aria-expanded="false">
                 <img src="landing-page-pictures/ismail hamani profile picture.jpeg" class="profile-picture">
                 <p class="username"></p>
             </div>
@@ -193,6 +193,19 @@
                 <a class="sign-up" href="sign up.html">Sign Up</a>
                 <a class="login" href="login.html">Log in</a>
             </div>
+        </div>
+
+        <div class="profile-menu" id="profile-menu" aria-hidden="true">
+            <a class="profile-menu-item" href="profile-edit.html">
+                <span class="profile-menu-label">Profile</span>
+                <img src="landing-page-pictures/ismail hamani profile picture.jpeg" class="menu-avatar" alt="Profile picture">
+            </a>
+            <a class="profile-menu-item" href="course-video.html">
+                <span class="profile-menu-label">Course</span>
+                <svg class="menu-course-icon" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
+                    <path d="M19.5,2H4.5C2.019,2,0,4.019,0,6.5V14.5c0,2.481,2.019,4.5,4.5,4.5h7v2H7.5c-.276,0-.5,.224-.5,.5s.224,.5,.5,.5h9c.276,0,.5-.224,.5-.5s-.224-.5-.5-.5h-4v-2h7c2.481,0,4.5-2.019,4.5-4.5V6.5c0-2.481-2.019-4.5-4.5-4.5Zm3.5,12.5c0,1.93-1.57,3.5-3.5,3.5H4.5c-1.93,0-3.5-1.57-3.5-3.5V6.5c0-1.93,1.57-3.5,3.5-3.5h15c1.93,0,3.5,1.57,3.5,3.5V14.5Z" />
+                </svg>
+            </a>
         </div>
 
         <!-- welcoming -->
@@ -219,11 +232,101 @@
 
         <!-- watch before you start -->
 
+                                const profileMenuTrigger = document.getElementById('profile-menu-trigger');
+                                const profileMenu = document.getElementById('profile-menu');
+                                const profileMenuItems = profileMenu ? profileMenu.querySelectorAll('a') : [];
+
+                                function closeProfileMenu() {
+                                    if (!profileMenu || !profileMenuTrigger) {
+                                        return;
+                                    }
+
+                                    profileMenu.classList.remove('open');
+                                    profileMenu.style.left = '';
+                                    profileMenu.style.top = '';
+                                    profileMenu.style.display = 'none';
+                                    profileMenuTrigger.setAttribute('aria-expanded', 'false');
+                                    profileMenu.setAttribute('aria-hidden', 'true');
+                                }
+
+                                function positionProfileMenu() {
+                                    if (!profileMenu || !profileMenuTrigger) {
+                                        return;
+                                    }
+
+                                    const triggerRect = profileMenuTrigger.getBoundingClientRect();
+                                    const menuWidth = profileMenu.offsetWidth || 220;
+                                    const menuLeft = Math.max(16, Math.min(triggerRect.left, window.innerWidth - menuWidth - 16));
+                                    const menuTop = triggerRect.bottom + 12;
+
+                                    profileMenu.style.left = `${menuLeft}px`;
+                                    profileMenu.style.top = `${menuTop}px`;
+                                }
+
+                                function openProfileMenu() {
+                                    if (!profileMenu || !profileMenuTrigger) {
+                                        return;
+                                    }
+
+                                    if (profileMenu.classList.contains('open')) {
+                                        closeProfileMenu();
+                                        return;
+                                    }
+
+                                    profileMenu.classList.add('open');
+                                    profileMenu.setAttribute('aria-hidden', 'false');
+                                    profileMenuTrigger.setAttribute('aria-expanded', 'true');
+                                    profileMenu.style.display = 'flex';
+                                    positionProfileMenu();
+                                }
 
         <div class="television">
             <div class="bigger">
                 <?xml version="1.0" encoding="UTF-8"?>
                 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
+                                    if (profileMenuTrigger) {
+                                        profileMenuTrigger.addEventListener('click', function(event) {
+                                            event.stopPropagation();
+                                            openProfileMenu();
+                                        });
+
+                                        profileMenuTrigger.addEventListener('keydown', function(event) {
+                                            if (event.key === 'Enter' || event.key === ' ') {
+                                                event.preventDefault();
+                                                openProfileMenu();
+                                            }
+                                        });
+                                    }
+
+                                    profileMenuItems.forEach(function(item) {
+                                        item.addEventListener('click', function() {
+                                            closeProfileMenu();
+                                        });
+                                    });
+
+                                    document.addEventListener('click', function(event) {
+                                        if (!profileMenu || !profileMenuTrigger) {
+                                            return;
+                                        }
+
+                                        if (!profileMenu.classList.contains('open')) {
+                                            return;
+                                        }
+
+                                        if (profileMenu.contains(event.target) || profileMenuTrigger.contains(event.target)) {
+                                            return;
+                                        }
+
+                                        closeProfileMenu();
+                                    });
+
+                                    window.addEventListener('resize', closeProfileMenu);
+                                    window.addEventListener('scroll', closeProfileMenu, true);
+                                    document.addEventListener('keydown', function(event) {
+                                        if (event.key === 'Escape') {
+                                            closeProfileMenu();
+                                        }
+                                    });
                     <path
                         d="M11.997,7.404c-2.943,.019-4.58,1.718-4.58,4.605s1.638,4.569,4.586,4.586c2.942-.018,4.525-1.604,4.58-4.604-.051-2.938-1.677-4.568-4.586-4.587Zm.006,8.191c-2.399-.014-3.539-1.157-3.586-3.596,.046-2.438,1.186-3.581,3.58-3.596,2.339,.016,3.545,1.228,3.586,3.586-.044,2.445-1.184,3.591-3.58,3.605Z" />
                     <path
@@ -281,10 +384,10 @@
                     </div>
                 </div>
                 <div class="second">
-                    <p class="header">Choose Your Course & Payement Method</p>
+                    <p class="header">Choose Your Course</p>
                     <div class="down-header">
                         <p>If you don't have an account yet, you'll be redirected to sign in first.
-                            Once inside, you'll select your preferred payment method : Binance or BaridiMob. Here, you
+                            Once inside, you'll select read more informations about the course. Here, you
                             can also read more details about the course before confirming</p>
                         <svg class="grid-arrow" width="61" height="62" viewBox="0 0 61 62" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -297,10 +400,10 @@
                 <div class="third">
                     <p class="header">Confirm Your Request & Send Proof</p>
                     <div class="down-header">
-                        <p>After choosing your payment method, click “Confirm Request.” The website will provide you
-                            with the necessary payment details (Binance ID or BaridiMob RIP). Once you've sent the
-                            payment, simply send Ismail a quick WhatsApp message with proof — like a screenshot or
-                            transaction ID</p>
+                        <p>After reading the course informations, click “Continue” The website will provide you
+                            with the necessary payment details (BaridiMob RIP).  Once you've sent the
+                            payment, simply send Ismail a quick WhatsApp message from the whatsapp icon with proof. Like a screenshot or
+                            transaction PDF</p>
                         <svg class="grid-arrow" width="61" height="62" viewBox="0 0 61 62" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -710,6 +813,7 @@
                 // USER IS NOT LOGGED IN
                 if (navLeft) navLeft.style.display = 'none';
                 if (navRight) navRight.style.display = 'flex';
+                    closeProfileMenu();
             }
         });
     </script>
