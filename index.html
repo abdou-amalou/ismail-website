@@ -232,101 +232,10 @@
 
         <!-- watch before you start -->
 
-                                const profileMenuTrigger = document.getElementById('profile-menu-trigger');
-                                const profileMenu = document.getElementById('profile-menu');
-                                const profileMenuItems = profileMenu ? profileMenu.querySelectorAll('a') : [];
-
-                                function closeProfileMenu() {
-                                    if (!profileMenu || !profileMenuTrigger) {
-                                        return;
-                                    }
-
-                                    profileMenu.classList.remove('open');
-                                    profileMenu.style.left = '';
-                                    profileMenu.style.top = '';
-                                    profileMenu.style.display = 'none';
-                                    profileMenuTrigger.setAttribute('aria-expanded', 'false');
-                                    profileMenu.setAttribute('aria-hidden', 'true');
-                                }
-
-                                function positionProfileMenu() {
-                                    if (!profileMenu || !profileMenuTrigger) {
-                                        return;
-                                    }
-
-                                    const triggerRect = profileMenuTrigger.getBoundingClientRect();
-                                    const menuWidth = profileMenu.offsetWidth || 220;
-                                    const menuLeft = Math.max(16, Math.min(triggerRect.left, window.innerWidth - menuWidth - 16));
-                                    const menuTop = triggerRect.bottom + 12;
-
-                                    profileMenu.style.left = `${menuLeft}px`;
-                                    profileMenu.style.top = `${menuTop}px`;
-                                }
-
-                                function openProfileMenu() {
-                                    if (!profileMenu || !profileMenuTrigger) {
-                                        return;
-                                    }
-
-                                    if (profileMenu.classList.contains('open')) {
-                                        closeProfileMenu();
-                                        return;
-                                    }
-
-                                    profileMenu.classList.add('open');
-                                    profileMenu.setAttribute('aria-hidden', 'false');
-                                    profileMenuTrigger.setAttribute('aria-expanded', 'true');
-                                    profileMenu.style.display = 'flex';
-                                    positionProfileMenu();
-                                }
-
         <div class="television">
             <div class="bigger">
                 <?xml version="1.0" encoding="UTF-8"?>
                 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
-                                    if (profileMenuTrigger) {
-                                        profileMenuTrigger.addEventListener('click', function(event) {
-                                            event.stopPropagation();
-                                            openProfileMenu();
-                                        });
-
-                                        profileMenuTrigger.addEventListener('keydown', function(event) {
-                                            if (event.key === 'Enter' || event.key === ' ') {
-                                                event.preventDefault();
-                                                openProfileMenu();
-                                            }
-                                        });
-                                    }
-
-                                    profileMenuItems.forEach(function(item) {
-                                        item.addEventListener('click', function() {
-                                            closeProfileMenu();
-                                        });
-                                    });
-
-                                    document.addEventListener('click', function(event) {
-                                        if (!profileMenu || !profileMenuTrigger) {
-                                            return;
-                                        }
-
-                                        if (!profileMenu.classList.contains('open')) {
-                                            return;
-                                        }
-
-                                        if (profileMenu.contains(event.target) || profileMenuTrigger.contains(event.target)) {
-                                            return;
-                                        }
-
-                                        closeProfileMenu();
-                                    });
-
-                                    window.addEventListener('resize', closeProfileMenu);
-                                    window.addEventListener('scroll', closeProfileMenu, true);
-                                    document.addEventListener('keydown', function(event) {
-                                        if (event.key === 'Escape') {
-                                            closeProfileMenu();
-                                        }
-                                    });
                     <path
                         d="M11.997,7.404c-2.943,.019-4.58,1.718-4.58,4.605s1.638,4.569,4.586,4.586c2.942-.018,4.525-1.604,4.58-4.604-.051-2.938-1.677-4.568-4.586-4.587Zm.006,8.191c-2.399-.014-3.539-1.157-3.586-3.596,.046-2.438,1.186-3.581,3.58-3.596,2.339,.016,3.545,1.228,3.586,3.586-.044,2.445-1.184,3.591-3.58,3.605Z" />
                     <path
@@ -767,11 +676,102 @@
             const navLeft = document.querySelector('.nav-bar .left');
             const navRight = document.querySelector('.nav-bar .right');
             const usernameElement = document.querySelector('.nav-bar .username');
+            const profileMenuTrigger = document.getElementById('profile-menu-trigger');
+            const profileMenu = document.getElementById('profile-menu');
+            const profileMenuItems = profileMenu ? profileMenu.querySelectorAll('a') : [];
+
+            function closeProfileMenu() {
+                if (!profileMenu || !profileMenuTrigger) {
+                    return;
+                }
+
+                profileMenu.classList.remove('open');
+                profileMenu.style.left = '';
+                profileMenu.style.top = '';
+                profileMenu.style.display = 'none';
+                profileMenuTrigger.setAttribute('aria-expanded', 'false');
+                profileMenu.setAttribute('aria-hidden', 'true');
+            }
+
+            function positionProfileMenu() {
+                if (!profileMenu || !profileMenuTrigger) {
+                    return;
+                }
+
+                const triggerRect = profileMenuTrigger.getBoundingClientRect();
+                const menuWidth = profileMenu.offsetWidth || 220;
+                const menuLeft = Math.max(16, Math.min(triggerRect.left, window.innerWidth - menuWidth - 16));
+                const menuTop = triggerRect.bottom + 12;
+
+                profileMenu.style.left = `${menuLeft}px`;
+                profileMenu.style.top = `${menuTop}px`;
+            }
+
+            function openProfileMenu() {
+                if (!profileMenu || !profileMenuTrigger) {
+                    return;
+                }
+
+                if (profileMenu.classList.contains('open')) {
+                    closeProfileMenu();
+                    return;
+                }
+
+                profileMenu.classList.add('open');
+                profileMenu.setAttribute('aria-hidden', 'false');
+                profileMenuTrigger.setAttribute('aria-expanded', 'true');
+                profileMenu.style.display = 'flex';
+                positionProfileMenu();
+            }
             
             if (token) {
                 // USER IS LOGGED IN
                 if (navRight) navRight.style.display = 'none';
                 if (navLeft) navLeft.style.display = 'flex';
+
+                if (profileMenuTrigger) {
+                    profileMenuTrigger.addEventListener('click', function(event) {
+                        event.stopPropagation();
+                        openProfileMenu();
+                    });
+
+                    profileMenuTrigger.addEventListener('keydown', function(event) {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            openProfileMenu();
+                        }
+                    });
+                }
+
+                profileMenuItems.forEach(function(item) {
+                    item.addEventListener('click', function() {
+                        closeProfileMenu();
+                    });
+                });
+
+                document.addEventListener('click', function(event) {
+                    if (!profileMenu || !profileMenuTrigger) {
+                        return;
+                    }
+
+                    if (!profileMenu.classList.contains('open')) {
+                        return;
+                    }
+
+                    if (profileMenu.contains(event.target) || profileMenuTrigger.contains(event.target)) {
+                        return;
+                    }
+
+                    closeProfileMenu();
+                });
+
+                window.addEventListener('resize', closeProfileMenu);
+                window.addEventListener('scroll', closeProfileMenu, true);
+                document.addEventListener('keydown', function(event) {
+                    if (event.key === 'Escape') {
+                        closeProfileMenu();
+                    }
+                });
                 
                 // Fetch username from backend
                 fetch(`${BACKEND_URL}/api/username/me`, {
@@ -813,7 +813,7 @@
                 // USER IS NOT LOGGED IN
                 if (navLeft) navLeft.style.display = 'none';
                 if (navRight) navRight.style.display = 'flex';
-                    closeProfileMenu();
+                closeProfileMenu();
             }
         });
     </script>
