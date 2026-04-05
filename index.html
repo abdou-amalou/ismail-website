@@ -669,6 +669,10 @@
     <script src="notifications.js"></script>
     <script src="contact-form.js"></script>
     <script>
+        // Defensive fallback: avoids runtime crashes if any stale global call remains after deploy.
+        window.closeProfileMenu = window.closeProfileMenu || function() {};
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const BACKEND_URL = 'https://smail-app-production.up.railway.app';
             const token = localStorage.getItem('token');
