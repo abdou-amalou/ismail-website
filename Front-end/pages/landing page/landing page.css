@@ -223,6 +223,13 @@ img {
     border-radius: 100px;
 }
 
+.nav-bar .left .profile-picture {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .welcoming {
     text-align: center;
     display: flex;
