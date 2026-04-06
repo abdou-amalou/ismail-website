@@ -79,7 +79,7 @@ body {
     justify-content: space-between;
     padding-left: 20px;
     padding-right: 20px;
-    padding: 1.4%;
+    padding: 15px;
     margin: 10px;
     align-items: center;
     overflow: hidden;
@@ -88,8 +88,9 @@ body {
 .profile-some-info {
     display: flex;
     flex-direction: row-reverse;
-    width: 14%;
-    justify-content: space-between;
+    width: 70%;
+    justify-content: flex-end;
+    gap : 10px;
     align-items: center;
     color: #C7E3FF;
     margin-left: 3%;
@@ -100,14 +101,13 @@ body {
     display: flex;
     border: solid #C7E3FF 1px;
     border-radius: 88px;
-    width: 6%;
+    width: 70px;
     flex-direction: row-reverse;
-    justify-content: space-between;
+    justify-content: center;
+    gap : 10px;
     align-items: center;
     color: #C7E3FF;
-    padding: 0.2%;
-    padding-left: 0.5%;
-    padding-right: 0.5%;
+    padding: 2px;
     margin-right: 8%;
     overflow: hidden;
     transition: all 0.4s;
@@ -142,7 +142,7 @@ body {
     justify-content: space-between;
     padding-left: 20px;
     padding-right: 20px;
-    padding: 1.4%;
+    padding: 15px;
     margin: 10px;
     align-items: center;
     height: 35%;
@@ -201,7 +201,7 @@ body {
     justify-content: space-between;
     padding-left: 20px;
     padding-right: 20px;
-    padding: 1.4%;
+    padding: 15px;
     margin: 10px;
     align-items: center;
     overflow: hidden;
@@ -210,7 +210,7 @@ body {
 .profile-security {
     display: flex;
     flex-direction: column;
-    width: 14%;
+    width: 70%;
     justify-content: space-between;
     color: #C7E3FF;
     margin-left: 3%;
@@ -534,4 +534,37 @@ a {
     background: #00B7FF;
     cursor: pointer;
     border: none;
+}
+@media (max-width : 800px){
+    .profile {
+        flex-direction: column-reverse;
+        justify-content: center;
+        margin : auto;
+        margin : 0px;
+        align-items: center;
+        margin : 30px;
+    }
+    .right {
+        width: 100%;
+        margin-top: 20px;
+        padding : 30px;
+    }
+    .home:hover {
+        background-color: transparent;
+        transform : scale(110%);
+        cursor: pointer;
+    }
+    .left{
+        width : 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .home{
+        display: flex;
+        width : 100px;
+        justify-content: center;
+        align-items: center;
+    }
 }

@@ -172,3 +172,64 @@ hr {
 .next-lesson-image{
     transform: rotate(180deg);
 }
+
+
+@media (max-width: 1320px) {
+    .middle {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .video {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+    }
+
+    .playlist {
+        width: 100%;
+    }
+}
+
+@media (max-width: 900px) {
+    body {
+        padding: 14px;
+    }
+
+    .chapter-name {
+        font-size: 150%;
+        letter-spacing: -1px;
+    }
+
+    .previous-next-lesson {
+        width: 100%;
+        gap: 10px;
+    }
+
+    .previous-lesson,
+    .next-lesson {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .upper-part .left p,
+    .upper-part .right p {
+        font-size: 80%;
+    }
+
+    .play-button {
+        width: 58px;
+        height: 58px;
+    }
+
+    .play-svg {
+        width: 22px;
+        height: 25px;
+    }
+
+    .previous-next-lesson {
+        flex-direction: column;
+    }
+}

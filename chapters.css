@@ -68,10 +68,16 @@ body {
     align-items: center;
     justify-content: center;
 }
+.chapters .chapter-link{
+    width : 65%;
+    display : block;
+    color : inherit;
+    text-decoration : none;
+}
 .chapter{
     display: flex;
     flex-direction : column;
-    width : 65%;
+    width : 100%;
     padding : 15px;
     backdrop-filter: blur(3px);
     border-top: solid rgba(255, 255, 255, 0.374) 1px;

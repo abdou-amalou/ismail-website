@@ -432,7 +432,7 @@
                             </div>
                             <hr>
                         </div>
-                        <a href="course-informations.html">
+                        <a class="buy-now-link" href="course-informations.html">
                             <?xml version="1.0" encoding="UTF-8"?>
                             <svg class="credit-card" xmlns="http://www.w3.org/2000/svg" id="Outline"
                                 viewBox="0 0 24 24">
@@ -683,6 +683,24 @@
             const profileMenuTrigger = document.getElementById('profile-menu-trigger');
             const profileMenu = document.getElementById('profile-menu');
             const profileMenuItems = profileMenu ? profileMenu.querySelectorAll('a') : [];
+
+            // ===== UPDATED CODE START: BUY NOW AUTH REDIRECT =====
+            const buyNowLink = document.querySelector('.buy-now-link');
+
+            if (buyNowLink) {
+                buyNowLink.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const activeToken = localStorage.getItem('token');
+
+                    if (activeToken) {
+                        window.location.href = 'course-informations.html';
+                        return;
+                    }
+
+                    window.location.href = 'sign up.html';
+                });
+            }
+            // ===== UPDATED CODE END: BUY NOW AUTH REDIRECT =====
 
             function closeProfileMenu() {
                 if (!profileMenu || !profileMenuTrigger) {
