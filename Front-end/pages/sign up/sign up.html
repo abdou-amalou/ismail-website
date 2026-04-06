@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up and get started</title>
     <link rel="stylesheet" href="sign up.css">
-    <link rel="stylesheet" href="notifications.css">
+    <link rel="stylesheet" href="../../Services/notifications.css">
 </head>
 
 <body>
@@ -14,7 +14,7 @@
     <div class="circle2"></div>
     <div class="all-the-work">
         <div class="sign-up">
-            <a href="index.html">
+            <a href="../landing page/index.html">
                 <p class="home">
                     < home</p>
             </a>
@@ -94,7 +94,7 @@
                     </div>
                     <input type="submit" value="Sign Up" class="sign-up-button">
                 </form>
-                <p class="already-have-an-account">Already have an account? <a href="login.html"><span>Log In</span></a>
+                <p class="already-have-an-account">Already have an account? <a href="../login/login.html"><span>Log In</span></a>
                 </p>
             </div>
             <div class="right">
@@ -103,7 +103,7 @@
         </div>
     </div>
 
-    <script src="notifications.js"></script>
+    <script src="../../Services/notifications.js"></script>
     <script>
         const BACKEND_URL = 'https://smail-app-production.up.railway.app';
 
@@ -210,7 +210,7 @@
                     showNotification('Account created successfully! Redirecting to login...', 'success');
 
                     setTimeout(() => {
-                        window.location.href = 'course-informations.html';
+                        window.location.href = '../course-informations/course-informations.html';
                     }, 1000);
 
                 } catch (error) {

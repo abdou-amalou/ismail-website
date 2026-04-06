@@ -11,7 +11,7 @@ body {
     flex-direction : column;
     align-items : center;
     justify-content:center;
-    background-image: url("course-chapters-pictures/dotted-lines.png"), linear-gradient(to bottom, #010101, #13467B);
+    background-image: url("../../image/course-chapters-pictures/dotted-lines.png"), linear-gradient(to bottom, #010101, #13467B);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -174,7 +174,7 @@ a{
         justify-content:center;
         overflow-y:visible;
         height: auto;
-        background-image: url("course-chapters-pictures/dotted-lines.png"), linear-gradient(to bottom, #010101, #13467B);
+        background-image: url("../../image/course-chapters-pictures/dotted-lines.png"), linear-gradient(to bottom, #010101, #13467B);
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;

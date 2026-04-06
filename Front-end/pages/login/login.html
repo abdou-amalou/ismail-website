@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log in , Welcome back</title>
     <link rel="stylesheet" href="login.css">
-    <link rel="stylesheet" href="notifications.css">
+    <link rel="stylesheet" href="../../Services/notifications.css">
 </head>
 
 <body>
     <div class="circle1"></div>
     <div class="circle2"></div>
     <div class="all-the-work">
-        <a href="index.html">
+        <a href="../landing page/index.html">
             <p class="home">
                 < home</p>
         </a>
@@ -69,11 +69,11 @@
                             </svg>
                         </div>
                     </div>
-                    <p class="forget-password"><a class="forget-link" href="forget-password.html">forget password ?</a>
+                    <p class="forget-password"><a class="forget-link" href="../forget-password/forget-password.html">forget password ?</a>
                     </p>
                     <input type="submit" value="Log in" class="sign-up-button">
                 </form>
-                <p class="already-have-an-account">Don't have an account? <a href="sign up.html"><span>Sign
+                <p class="already-have-an-account">Don't have an account? <a href="../sign up/sign up.html"><span>Sign
                             up</span></a></p>
             </div>
             <div class="right">
@@ -82,7 +82,7 @@
         </div>
     </div>
 
-    <script src="notifications.js"></script>
+    <script src="../../Services/notifications.js"></script>
     <script>
         const BACKEND_URL = 'https://smail-app-production.up.railway.app';
 
@@ -180,7 +180,7 @@
                     showNotification('Login successful! Redirecting...', 'success');
 
                     setTimeout(() => {
-                        window.location.href = 'course-informations.html';
+                        window.location.href = '../course-informations/course-informations.html';
                     }, 1000);
 
                 } catch (error) {

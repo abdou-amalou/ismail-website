@@ -232,7 +232,7 @@ img {
     border-radius: 40px;
     width: 94%;
     padding: 3%;
-    background-image: url("landing-page-pictures/welcoming-background-picture.png");
+    background-image: url("../../image/landing-page-pictures/welcoming-background-picture.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -999,7 +999,7 @@ a .button p {
     align-items: center;
     display: flex;
     padding: 45px;
-    background-image: url("landing-page-pictures/dotted\ lines\ on\ purchase.png"), linear-gradient(to bottom, #010101, #13467B);
+    background-image: url("../../image/landing-page-pictures/dotted\ lines\ on\ purchase.png"), linear-gradient(to bottom, #010101, #13467B);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -1256,7 +1256,7 @@ hr {
     justify-content: center;
     width: 93%;
     max-width: 1430px;
-    background-image: url("landing-page-pictures/dotted\ lines\ on\ about.png"), linear-gradient(to bottom, #010101, #13467B);
+    background-image: url("../../image/landing-page-pictures/dotted\ lines\ on\ about.png"), linear-gradient(to bottom, #010101, #13467B);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -1885,7 +1885,7 @@ html {
         border-radius: 40px;
         width: 94%;
         padding: 3%;
-        background-image: url("landing-page-pictures/welcoming-background-picture.png");
+        background-image: url("../../image/landing-page-pictures/welcoming-background-picture.png");
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -2081,7 +2081,7 @@ html {
         align-items: center;
         justify-content: center;
         padding: 30px;
-        background-image: url("landing-page-pictures/dotted\ lines\ on\ purchase.png"), linear-gradient(to bottom, #010101, #13467B);
+        background-image: url("../../image/landing-page-pictures/dotted\ lines\ on\ purchase.png"), linear-gradient(to bottom, #010101, #13467B);
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -2365,7 +2365,7 @@ html {
         align-items: center;
         justify-content: center;
         width: 90%;
-        background-image: url("landing-page-pictures/dotted\ lines\ on\ about.png"), linear-gradient(to bottom, #010101, #13467B);
+        background-image: url("../../image/landing-page-pictures/dotted\ lines\ on\ about.png"), linear-gradient(to bottom, #010101, #13467B);
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;

@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Payment Dashboard</title>
+  <link rel="stylesheet" href="admin-dashbord-interface.css">
+</head>
+
+<body>
+  <div class="dashboard">
+    <header class="topbar">
+      <div>
+        <h1>Admin Dashboard</h1>
+        <p>Users from front-end signups with payment status control.</p>
+      </div>
+    </header>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Students List</h2>
+        <div class="search-wrap">
+          <label for="searchInput">Search by email</label>
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="example@email.com"
+            oninput="filterUsers()"
+          >
+        </div>
+      </div>
+
+      <table class="users-table" aria-label="Students and payment status">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Change</th>
+          </tr>
+        </thead>
+        <tbody id="usersBody"></tbody>
+      </table>
+      <p class="empty-state" id="emptyState" hidden>No student found for this email.</p>
+    </section>
+  </div>
+
+<script>
+  const users = [
+    { username: 'amine.bouafia', email: 'amine.bouafia@gmail.com', status: 'not payed' },
+    { username: 'rania.kouider', email: 'rania.kouider@gmail.com', status: 'not payed' },
+    { username: 'younes.aitmoussa', email: 'younes.aitmoussa@gmail.com', status: 'not payed' },
+    { username: 'hamza.drici', email: 'hamza.drici@gmail.com', status: 'not payed' },
+    { username: 'lina.ouali', email: 'lina.ouali@gmail.com', status: 'not payed' }
+  ];
+
+  let searchValue = '';
+
+  function renderUsers() {
+    const usersBody = document.getElementById('usersBody');
+    const emptyState = document.getElementById('emptyState');
+    const filteredUsers = users.filter((user) => user.email.toLowerCase().includes(searchValue.toLowerCase()));
+
+    usersBody.innerHTML = filteredUsers.map((user) => `
+      <tr>
+        <td>${user.username}</td>
+        <td>${user.email}</td>
+        <td>
+          <span class="status-pill ${user.status === 'payed' ? 'status-payed' : 'status-not-payed'}">
+            ${user.status}
+          </span>
+        </td>
+        <td>
+          <button class="toggle-status" onclick="togglePaymentStatus('${user.email}')">
+            ${user.status === 'payed' ? 'Set not payed' : 'Set payed'}
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+    emptyState.hidden = filteredUsers.length !== 0;
+  }
+
+  function filterUsers() {
+    searchValue = document.getElementById('searchInput').value;
+    renderUsers();
+  }
+
+  function togglePaymentStatus(email) {
+    const user = users.find((item) => item.email === email);
+    if (!user) {
+      return;
+    }
+
+    user.status = user.status === 'not payed' ? 'payed' : 'not payed';
+    renderUsers();
+  }
+
+  renderUsers();
+</script>
+
+</body>
+
+</html>

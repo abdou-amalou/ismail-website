@@ -15,7 +15,7 @@ body {
 
 .input-svg,
 .no-eye {
-    width: 22px;
+    width: 20px;
     height: 20px;
     position: absolute;
     right: 7%;
@@ -29,6 +29,10 @@ body {
 
 .no-eye {
     opacity: 60%;
+}
+
+.toggle-password {
+    cursor: pointer;
 }
 
 .circle1 {
@@ -76,7 +80,6 @@ form {
     padding: 6px;
     background-color: white;
     border-radius: 100px;
-    height: 500px;
     justify-content: space-between;
 }
 
@@ -90,9 +93,9 @@ form {
 }
 
 .heading {
-    font-size: 250%;
+    font-size: 300%;
     font-weight: 500;
-    letter-spacing: -4px;
+    letter-spacing: -5px;
     color: #003B75;
 }
 
@@ -127,7 +130,7 @@ form {
 .google-signin:hover {
     background-color: #f8f9fa;
     border-color: #c6c6c6;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .google-signin svg {
@@ -197,6 +200,22 @@ input:-webkit-autofill:focus {
     font-size: 110% !important;
 }
 
+.first-name-input input:focus,
+.last-name-input input:focus,
+.phone-number-input input:focus,
+.password-input input:focus,
+.confirm-password-input input:focus {
+    width: 100%;
+    padding: 5px 45px 5px 20px;
+    margin-bottom: 6px;
+    background: none;
+    border: none;
+    outline: none;
+    border: solid 1px #53626f9e;
+    border-radius: 100px;
+    font-size: 110%;
+}
+
 .sign-up-button {
     margin-top: 30px;
     width: 85%;
@@ -239,12 +258,12 @@ span {
 }
 
 .right {
-    background-image: url("sign\ up\ pictures/sign\ up\ picture.png");
+    background-image: url("../../image/sign up pictures/sign up picture.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 95px;
-    width: 350px;
+    width: 339px;
     position: relative;
 }
 
@@ -288,36 +307,10 @@ input[type=number] {
     text-shadow: 0px 0px 10px #136db6;
 }
 
-.first-name-input input:focus,
-.last-name-input input:focus,
-.phone-number-input input:focus,
-.password-input input:focus,
-.confirm-password-input input:focus {
-    width: 100%;
-    padding: 5px 45px 5px 20px;
-    margin-bottom: 6px;
-    background: none;
-    border: none;
-    outline: none;
-    border: solid 1px #53626f9e;
-    border-radius: 100px;
-    font-size: 110%;
+#email-svg {
+    opacity: 60%;
 }
 
-.forget-password {
-    width: 210px;
-    font-size: 70%;
-    text-align: right;
-    opacity: 65%;
-}
-
-.forget-link {
-    color: black;
-}
-
-.forget-link:hover {
-    cursor: pointer;
-}
 @media (max-width:1324px) {
     .right {
         display: none;

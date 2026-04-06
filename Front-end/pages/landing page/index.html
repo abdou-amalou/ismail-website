@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ismail Hamani - Video Editing Masterclass</title>
-    <link rel="icon" type="png" href="favicon/landing page favicon.png">
+    <link rel="icon" type="png" href="../../image/favicon/landing page favicon.png">
     <link rel="stylesheet" href="landing page.css">
-    <link rel="stylesheet" href="notifications.css">
+    <link rel="stylesheet" href="../../Services/notifications.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
 </head>
 
@@ -179,7 +179,7 @@
 
         <div class="nav-bar">
             <div class="left" id="profile-menu-trigger" role="button" tabindex="0" aria-haspopup="menu" aria-expanded="false">
-                <img src="landing-page-pictures/ismail hamani profile picture.jpeg" class="profile-picture">
+                <img src="../../image/landing-page-pictures/ismail hamani profile picture.jpeg" class="profile-picture">
                 <p class="username"></p>
             </div>
             <div class="middle">
@@ -190,17 +190,17 @@
                 <a href="#contact">Contact</a>
             </div>
             <div class="right">
-                <a class="sign-up" href="sign up.html">Sign Up</a>
-                <a class="login" href="login.html">Log in</a>
+                <a class="sign-up" href="../sign up/sign up.html">Sign Up</a>
+                <a class="login" href="../login/login.html">Log in</a>
             </div>
         </div>
 
         <div class="profile-menu" id="profile-menu" aria-hidden="true">
-            <a class="profile-menu-item" href="profile-edit.html">
+            <a class="profile-menu-item" href="../edit profile/profile-edit.html">
                 <span class="profile-menu-label">Profile</span>
-                <img src="landing-page-pictures/ismail hamani profile picture.jpeg" class="menu-avatar" alt="Profile picture">
+                <img src="../../image/landing-page-pictures/ismail hamani profile picture.jpeg" class="menu-avatar" alt="Profile picture">
             </a>
-            <a class="profile-menu-item" href="chapters.html">
+            <a class="profile-menu-item" href="../chapters/chapters.html">
                 <span class="profile-menu-label">Course</span>
                 <svg class="menu-course-icon" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
                     <path d="M19.5,2H4.5C2.019,2,0,4.019,0,6.5V14.5c0,2.481,2.019,4.5,4.5,4.5h7v2H7.5c-.276,0-.5,.224-.5,.5s.224,.5,.5,.5h9c.276,0,.5-.224,.5-.5s-.224-.5-.5-.5h-4v-2h7c2.481,0,4.5-2.019,4.5-4.5V6.5c0-2.481-2.019-4.5-4.5-4.5Zm3.5,12.5c0,1.93-1.57,3.5-3.5,3.5H4.5c-1.93,0-3.5-1.57-3.5-3.5V6.5c0-1.93,1.57-3.5,3.5-3.5h15c1.93,0,3.5,1.57,3.5,3.5V14.5Z" />
@@ -244,7 +244,7 @@
                 <p>Watch before you start</p>
             </div>
             <p class="smaller">Your instructor speaks directly to you here</p>
-            <img src="landing-page-pictures/younes aithamou.png">
+            <img src="../../image/landing-page-pictures/younes aithamou.png">
             <a class="a-button" href="#course">
                 <div class="button" id="watch-button">
                     <?xml version="1.0" encoding="UTF-8"?>
@@ -369,7 +369,7 @@
                     <div class="left-inside-right">
                         <div class="up-left">
                             <div class="profile-talk">
-                                <img src="landing-page-pictures/ismail hamani profile picture.jpeg"
+                                <img src="../../image/landing-page-pictures/ismail hamani profile picture.jpeg"
                                     class="profile-picture">
                                 <p class="ismail">Ismail Hamani</p>
                             </div>
@@ -432,7 +432,7 @@
                             </div>
                             <hr>
                         </div>
-                        <a class="buy-now-link" href="course-informations.html">
+                        <a class="buy-now-link" href="../course-informations/course-informations.html">
                             <?xml version="1.0" encoding="UTF-8"?>
                             <svg class="credit-card" xmlns="http://www.w3.org/2000/svg" id="Outline"
                                 viewBox="0 0 24 24">
@@ -456,7 +456,7 @@
             </p>
         </div>
         <div class="about-me-frame">
-            <img class="image-for-about-me" src="landing-page-pictures/ismail pictuere about me 3.png" alt="">
+            <img class="image-for-about-me" src="../../image/landing-page-pictures/ismail pictuere about me 3.png" alt="">
             <div class="left-up">
                 <p class="name">Ismail Hamani</p>
                 <p class="job">Professional Video Editor</p>
@@ -666,7 +666,7 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script src="notifications.js"></script>
+    <script src="../../Services/notifications.js"></script>
     <script src="contact-form.js"></script>
     <script>
         // Defensive fallback: avoids runtime crashes if any stale global call remains after deploy.
@@ -693,11 +693,11 @@
                     const activeToken = localStorage.getItem('token');
 
                     if (activeToken) {
-                        window.location.href = 'course-informations.html';
+                        window.location.href = '../course-informations/course-informations.html';
                         return;
                     }
 
-                    window.location.href = 'sign up.html';
+                    window.location.href = '../sign up/sign up.html';
                 });
             }
             // ===== UPDATED CODE END: BUY NOW AUTH REDIRECT =====

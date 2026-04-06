@@ -17,7 +17,7 @@
             <h2>Update Profile Picture</h2>
             <form id="picture-form">
                 <div class="picture-preview">
-                    <img src="landing-page-pictures/ismail hamani profile picture.jpeg" id="preview-img" alt="Preview">
+                    <img src="../../image/landing-page-pictures/ismail hamani profile picture.jpeg" id="preview-img" alt="Preview">
                 </div>
                 <div class="picture-controls">
                     <label for="picture-upload" class="upload-btn">
@@ -55,7 +55,7 @@
                 <div class="form-group">
                     <label>Current Password</label>
                     <input type="password" name="password" placeholder="Enter your password" required>
-                    <a href="forget-password.html" class="forgot-link">Forgot password?</a>
+                    <a href="../forget-password/forget-password.html" class="forgot-link">Forgot password?</a>
                 </div>
                 <div class="form-buttons">
                     <button type="button" class="cancel-btn" data-modal="username-modal">Cancel</button>
@@ -83,7 +83,7 @@
                             </svg>
                         </div>
                     </div>
-                    <a href="forget-password.html" class="forgot-link">Forgot password?</a>
+                    <a href="../forget-password/forget-password.html" class="forgot-link">Forgot password?</a>
                 </div>
                 <div class="form-group">
                     <label>New Password</label>
@@ -127,7 +127,7 @@
             <div class="upper">
                 <div class="profile-some-info">
                     <p id="display-username">Ismail Hamani</p>
-                    <img src="landing-page-pictures/ismail hamani profile picture.jpeg" class="profile-picture" id="main-profile-pic">
+                    <img src="../../image/landing-page-pictures/ismail hamani profile picture.jpeg" class="profile-picture" id="main-profile-pic">
                 </div>
                 <div class="edit" data-modal="picture-modal">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -202,7 +202,7 @@
             </div>
         </div>
         <div class="left">
-            <a href="index.html"><div class="home">
+            <a href="../landing page/index.html"><div class="home">
                 <p>Home</p>
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_39_9)">
@@ -299,8 +299,8 @@
         document.getElementById('remove-picture').addEventListener('click', function() {
             if (confirm('Are you sure you want to remove your profile picture?')) {
                 // Reset to default
-                previewImg.src = 'landing-page-pictures/ismail hamani profile picture.jpeg';
-                document.getElementById('main-profile-pic').src = 'landing-page-pictures/ismail hamani profile picture.jpeg';
+                previewImg.src = '../../image/landing-page-pictures/ismail hamani profile picture.jpeg';
+                document.getElementById('main-profile-pic').src = '../../image/landing-page-pictures/ismail hamani profile picture.jpeg';
                 uploadedFile = null;
                 alert('Profile picture removed!');
                 document.getElementById('picture-modal').style.display = 'none';
@@ -332,7 +332,7 @@
 
                 if (!token) {
                     alert('Please log in first!');
-                    window.location.href = 'login.html';
+                    window.location.href = '../login/login.html';
                     return;
                 }
 
@@ -385,7 +385,7 @@
 
                 if (!token) {
                     alert('Please log in first!');
-                    window.location.href = 'login.html';
+                    window.location.href = '../login/login.html';
                     return;
                 }
 

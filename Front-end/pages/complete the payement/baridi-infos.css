@@ -23,7 +23,7 @@ body {
     flex-direction: column;
     gap : 20px;
     justify-content: center;
-    background-image: url("baridi infos/dotted lines.png"),linear-gradient(to bottom, #010101, #13467B);
+    background-image: url("../../image/baridi infos/dotted lines.png"),linear-gradient(to bottom, #010101, #13467B);
     padding : 30px;
     border-radius: 15px;
     width : 90%;
