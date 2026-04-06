@@ -666,6 +666,7 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="../../Services/env-config.js"></script>
     <script src="../../Services/notifications.js"></script>
     <script src="contact-form.js"></script>
     <script>
@@ -673,8 +674,9 @@
         window.closeProfileMenu = window.closeProfileMenu || function() {};
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const BACKEND_URL = 'https://smail-app-production.up.railway.app';
+        document.addEventListener('DOMContentLoaded', async function() {
+            await window.ENV_CONFIG.load();
+            const BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
             const token = localStorage.getItem('token');
             
             const navLeft = document.querySelector('.nav-bar .left');

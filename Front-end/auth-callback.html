@@ -50,8 +50,14 @@
         <p>Please wait a moment</p>
     </div>
 
+    <script src="./Services/env-config.js"></script>
     <script src="./Services/notifications.js"></script>
     <script>
+        async function getApiBaseUrl() {
+            await window.ENV_CONFIG.load();
+            return window.ENV_CONFIG.getApiBaseUrl();
+        }
+
         function getTokenFromUrl() {
             const query = new URLSearchParams(window.location.search);
             const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
@@ -65,23 +71,28 @@
             );
         }
 
-        const token = getTokenFromUrl();
+        (async function () {
+            const BACKEND_URL = await getApiBaseUrl();
+            const token = getTokenFromUrl();
 
-        if (token) {
-            localStorage.setItem('token', token);
+            if (token) {
+                localStorage.setItem('token', token);
 
-            setTimeout(() => {
-                window.location.href = '/pages/course-informations/course-informations.html';
-            }, 700);
-        } else {
-            if (typeof showNotification === 'function') {
-                showNotification('Authentication failed. Please try again.', 'error');
+                setTimeout(() => {
+                    window.location.href = '/pages/course-informations/course-informations.html';
+                }, 700);
+            } else {
+                if (typeof showNotification === 'function') {
+                    showNotification('Authentication failed. Please try again.', 'error');
+                }
+
+                console.warn('OAuth callback returned without token from:', BACKEND_URL);
+
+                setTimeout(() => {
+                    window.location.href = '/pages/login/login.html';
+                }, 1200);
             }
-
-            setTimeout(() => {
-                window.location.href = '/pages/login/login.html';
-            }, 1200);
-        }
+        })();
     </script>
 </body>
 </html>

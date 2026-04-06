@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard Login</title>
+    <link rel="stylesheet" href="admin-dashbord-login.css">
+</head>
+<body>
+    <main class="login-page">
+        <section class="login-card" aria-labelledby="admin-login-title">
+            <p class="badge">Admin Area</p>
+            <h1 id="admin-login-title">Admin Dashboard Login</h1>
+            <p class="subtitle">Sign in with the admin email to continue.</p>
+
+            <form id="admin-login-form" novalidate>
+                <label for="admin-email">Admin Email</label>
+                <input
+                    id="admin-email"
+                    name="email"
+                    type="email"
+                    placeholder="admin@example.com"
+                    autocomplete="email"
+                    required
+                >
+
+                <label for="admin-password">Password</label>
+                <input
+                    id="admin-password"
+                    name="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button type="submit">Continue</button>
+                <p id="form-message" class="form-message" aria-live="polite"></p>
+            </form>
+        </section>
+    </main>
+
+    <script src="../Services/env-config.js"></script>
+    <script>
+        const form = document.getElementById('admin-login-form');
+        const emailInput = document.getElementById('admin-email');
+        const passwordInput = document.getElementById('admin-password');
+        const message = document.getElementById('form-message');
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const email = emailInput.value.trim().toLowerCase();
+            const password = passwordInput.value;
+
+            if (!email) {
+                message.textContent = 'Please enter your admin email.';
+                message.classList.add('error');
+                return;
+            }
+
+            if (!password) {
+                message.textContent = 'Please enter your password.';
+                message.classList.add('error');
+                return;
+            }
+
+            message.textContent = 'Signing in...';
+            message.classList.remove('error');
+
+            try {
+                await window.ENV_CONFIG.load();
+                const BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
+
+                const loginRes = await fetch(`${BACKEND_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const loginData = await loginRes.json().catch(() => ({}));
+                if (!loginRes.ok || !loginData.token) {
+                    throw new Error(loginData.message || 'Login failed.');
+                }
+
+                // Verify admin access using a protected admin endpoint.
+                const token = loginData.token;
+                const adminCheckRes = await fetch(`${BACKEND_URL}/api/dashboardinformation/clients`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                const adminCheckData = await adminCheckRes.json().catch(() => ({}));
+                if (!adminCheckRes.ok) {
+                    throw new Error(adminCheckData.message || 'Your account is not allowed to access admin dashboard.');
+                }
+
+                localStorage.setItem('token', token);
+                localStorage.setItem('adminEmail', email);
+                localStorage.setItem('isAdminSignedIn', 'true');
+
+                message.textContent = 'Login successful. Redirecting...';
+                message.classList.remove('error');
+
+                window.location.href = 'admin-dashbord-interface.html';
+            } catch (error) {
+                localStorage.removeItem('isAdminSignedIn');
+                message.textContent = error.message || 'Failed to sign in.';
+                message.classList.add('error');
+            }
+        });
+    </script>
+</body>
+</html>
