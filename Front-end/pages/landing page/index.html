@@ -678,13 +678,53 @@
             await window.ENV_CONFIG.load();
             const BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
             const token = localStorage.getItem('token');
+            const DEFAULT_PROFILE_PICTURE = '../../image/landing-page-pictures/ismail hamani profile picture.jpeg';
             
             const navLeft = document.querySelector('.nav-bar .left');
             const navRight = document.querySelector('.nav-bar .right');
             const usernameElement = document.querySelector('.nav-bar .username');
+            const navProfilePicture = document.querySelector('.nav-bar .left .profile-picture');
+            const menuAvatar = document.querySelector('.profile-menu .menu-avatar');
             const profileMenuTrigger = document.getElementById('profile-menu-trigger');
             const profileMenu = document.getElementById('profile-menu');
             const profileMenuItems = profileMenu ? profileMenu.querySelectorAll('a') : [];
+
+            function parseJwtPayload(tokenValue) {
+                try {
+                    if (!tokenValue || tokenValue.split('.').length < 2) {
+                        return null;
+                    }
+
+                    const payload = tokenValue.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                    return JSON.parse(atob(payload));
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            function getUserIdentifier(user) {
+                if (!user) {
+                    return 'guest';
+                }
+
+                return user.email || user._id || user.id || user.username || 'guest';
+            }
+
+            function getPictureStorageKey(user) {
+                return `profilePicture:${getUserIdentifier(user)}`;
+            }
+
+            function applyProfilePictureForUser(user) {
+                const storedPicture = localStorage.getItem(getPictureStorageKey(user)) || user?.profilePicture || DEFAULT_PROFILE_PICTURE;
+
+                if (navProfilePicture) {
+                    navProfilePicture.src = storedPicture;
+                }
+
+                if (menuAvatar) {
+                    menuAvatar.src = storedPicture;
+                }
+            }
 
             // ===== UPDATED CODE START: BUY NOW AUTH REDIRECT =====
             const buyNowLink = document.querySelector('.buy-now-link');
@@ -753,6 +793,30 @@
                 if (navRight) navRight.style.display = 'none';
                 if (navLeft) navLeft.style.display = 'flex';
 
+                const tokenPayload = parseJwtPayload(token) || {};
+                const storedRaw = localStorage.getItem('userData');
+                let storedUser = {};
+                if (storedRaw) {
+                    try {
+                        storedUser = JSON.parse(storedRaw) || {};
+                    } catch (error) {
+                        storedUser = {};
+                    }
+                }
+
+                const currentUser = {
+                    email: tokenPayload.email,
+                    username: tokenPayload.username || tokenPayload.name,
+                    _id: tokenPayload.id || tokenPayload._id || tokenPayload.sub,
+                    ...storedUser
+                };
+
+                applyProfilePictureForUser(currentUser);
+
+                if (currentUser.username && usernameElement) {
+                    usernameElement.textContent = currentUser.username;
+                }
+
                 if (profileMenuTrigger) {
                     profileMenuTrigger.addEventListener('click', function(event) {
                         event.stopPropagation();
@@ -817,6 +881,8 @@
                 .then(data => {
                     if (usernameElement && data.username) {
                         usernameElement.textContent = data.username;
+                        currentUser.username = data.username;
+                        localStorage.setItem('userData', JSON.stringify(currentUser));
                     }
                 })
                 .catch(error => {
@@ -829,6 +895,8 @@
                             if (usernameElement && user.username) {
                                 usernameElement.textContent = user.username;
                             }
+
+                            applyProfilePictureForUser(user);
                         } catch (e) {}
                     }
                 });

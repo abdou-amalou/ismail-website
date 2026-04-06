@@ -221,33 +221,104 @@
     <script src="../../Services/env-config.js"></script>
     <script>
         let BACKEND_URL = '';
+        const DEFAULT_PROFILE_PICTURE = '../../image/landing-page-pictures/ismail hamani profile picture.jpeg';
+        let currentUserData = null;
 
         // Load user data on page load
         document.addEventListener('DOMContentLoaded', async function() {
             await window.ENV_CONFIG.load();
             BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
-            loadUserData();
+            await loadUserData();
             setupModalHandlers();
             setupFormHandlers();
             setupPasswordToggles();
         });
 
-        // Load user data from localStorage
-        function loadUserData() {
-            const userData = localStorage.getItem('userData');
-            if (userData) {
-                try {
-                    const user = JSON.parse(userData);
-                    if (user.username) {
-                        document.getElementById('display-username').textContent = user.username;
-                        document.getElementById('username-display').textContent = user.username;
-                    }
-                    if (user.email) {
-                        document.getElementById('email-display').textContent = user.email;
-                    }
-                } catch (error) {
-                    console.error('Error loading user data:', error);
+        function parseJwtPayload(token) {
+            try {
+                if (!token || token.split('.').length < 2) {
+                    return null;
                 }
+
+                const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                return JSON.parse(atob(payload));
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function getUserIdentifier(user) {
+            if (!user) {
+                return 'guest';
+            }
+
+            return user.email || user._id || user.id || user.username || 'guest';
+        }
+
+        function getPictureStorageKey(user) {
+            return `profilePicture:${getUserIdentifier(user)}`;
+        }
+
+        function applyUserDataToUI(user) {
+            const username = user?.username || 'User';
+            const email = user?.email || 'No email available';
+
+            document.getElementById('display-username').textContent = username;
+            document.getElementById('username-display').textContent = username;
+            document.getElementById('email-display').textContent = email;
+
+            const storedPicture = localStorage.getItem(getPictureStorageKey(user)) || user?.profilePicture || DEFAULT_PROFILE_PICTURE;
+            document.getElementById('main-profile-pic').src = storedPicture;
+            document.getElementById('preview-img').src = storedPicture;
+        }
+
+        async function loadUserData() {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                window.location.href = '../login/login.html';
+                return;
+            }
+
+            const storedRaw = localStorage.getItem('userData');
+            let storedUser = {};
+
+            if (storedRaw) {
+                try {
+                    storedUser = JSON.parse(storedRaw) || {};
+                } catch (error) {
+                    storedUser = {};
+                }
+            }
+
+            const tokenPayload = parseJwtPayload(token) || {};
+            const tokenUser = {
+                email: tokenPayload.email,
+                username: tokenPayload.username || tokenPayload.name,
+                _id: tokenPayload.id || tokenPayload._id || tokenPayload.sub
+            };
+
+            const mergedUser = { ...tokenUser, ...storedUser };
+            currentUserData = mergedUser;
+            applyUserDataToUI(currentUserData);
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/username/me`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json().catch(() => ({}));
+
+                if (response.ok && data.username) {
+                    currentUserData.username = data.username;
+                    localStorage.setItem('userData', JSON.stringify(currentUserData));
+                    applyUserDataToUI(currentUserData);
+                }
+            } catch (error) {
+                console.error('Error fetching profile data:', error);
             }
         }
 
@@ -301,9 +372,16 @@
 
         document.getElementById('remove-picture').addEventListener('click', function() {
             if (confirm('Are you sure you want to remove your profile picture?')) {
-                // Reset to default
-                previewImg.src = '../../image/landing-page-pictures/ismail hamani profile picture.jpeg';
-                document.getElementById('main-profile-pic').src = '../../image/landing-page-pictures/ismail hamani profile picture.jpeg';
+                const key = getPictureStorageKey(currentUserData);
+                localStorage.removeItem(key);
+
+                if (currentUserData) {
+                    delete currentUserData.profilePicture;
+                    localStorage.setItem('userData', JSON.stringify(currentUserData));
+                }
+
+                previewImg.src = DEFAULT_PROFILE_PICTURE;
+                document.getElementById('main-profile-pic').src = DEFAULT_PROFILE_PICTURE;
                 uploadedFile = null;
                 alert('Profile picture removed!');
                 document.getElementById('picture-modal').style.display = 'none';
@@ -316,8 +394,17 @@
             document.getElementById('picture-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 if (uploadedFile) {
-                    // Update main profile picture
-                    document.getElementById('main-profile-pic').src = previewImg.src;
+                    const imageData = previewImg.src;
+                    document.getElementById('main-profile-pic').src = imageData;
+
+                    const key = getPictureStorageKey(currentUserData);
+                    localStorage.setItem(key, imageData);
+
+                    if (currentUserData) {
+                        currentUserData.profilePicture = imageData;
+                        localStorage.setItem('userData', JSON.stringify(currentUserData));
+                    }
+
                     alert('Profile picture updated successfully!');
                     document.getElementById('picture-modal').style.display = 'none';
                 } else {
@@ -360,10 +447,12 @@
                     document.getElementById('display-username').textContent = newUsername;
                     document.getElementById('username-display').textContent = newUsername;
 
-                    // Update localStorage
-                    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-                    userData.username = newUsername;
-                    localStorage.setItem('userData', JSON.stringify(userData));
+                    if (!currentUserData) {
+                        currentUserData = {};
+                    }
+
+                    currentUserData.username = newUsername;
+                    localStorage.setItem('userData', JSON.stringify(currentUserData));
 
                     alert('Username updated successfully!');
                     document.getElementById('username-modal').style.display = 'none';
