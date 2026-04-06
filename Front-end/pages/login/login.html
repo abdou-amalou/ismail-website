@@ -181,6 +181,13 @@
                     console.log('Login successful!');
 
                     localStorage.setItem('token', data.token);
+                    const existingUserData = JSON.parse(localStorage.getItem('userData') || '{}');
+                    const mergedUserData = {
+                        ...existingUserData,
+                        email: data?.user?.email || email,
+                        username: data?.user?.username || existingUserData.username || ''
+                    };
+                    localStorage.setItem('userData', JSON.stringify(mergedUserData));
                     console.log('Token saved to localStorage');
 
                     showNotification('Login successful! Redirecting...', 'success');

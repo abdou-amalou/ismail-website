@@ -71,12 +71,34 @@
             );
         }
 
+        function parseJwtPayload(token) {
+            try {
+                if (!token || token.split('.').length < 2) {
+                    return null;
+                }
+
+                const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                return JSON.parse(atob(payload));
+            } catch (error) {
+                return null;
+            }
+        }
+
         (async function () {
             const BACKEND_URL = await getApiBaseUrl();
             const token = getTokenFromUrl();
 
             if (token) {
                 localStorage.setItem('token', token);
+
+                const payload = parseJwtPayload(token) || {};
+                const existingUserData = JSON.parse(localStorage.getItem('userData') || '{}');
+                localStorage.setItem('userData', JSON.stringify({
+                    ...existingUserData,
+                    email: payload.email || existingUserData.email || '',
+                    username: payload.username || payload.name || existingUserData.username || '',
+                    _id: payload.id || payload._id || payload.sub || existingUserData._id || ''
+                }));
 
                 setTimeout(() => {
                     window.location.href = '/pages/course-informations/course-informations.html';

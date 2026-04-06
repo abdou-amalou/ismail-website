@@ -259,6 +259,23 @@
             return `profilePicture:${getUserIdentifier(user)}`;
         }
 
+        function pickFirstNonEmpty(...values) {
+            for (const value of values) {
+                if (typeof value === 'string') {
+                    if (value.trim()) {
+                        return value.trim();
+                    }
+                    continue;
+                }
+
+                if (value !== undefined && value !== null && value !== '') {
+                    return value;
+                }
+            }
+
+            return '';
+        }
+
         function applyUserDataToUI(user) {
             const username = user?.username || 'User';
             const email = user?.email || 'No email available';
@@ -292,14 +309,14 @@
             }
 
             const tokenPayload = parseJwtPayload(token) || {};
-            const tokenUser = {
-                email: tokenPayload.email,
-                username: tokenPayload.username || tokenPayload.name,
-                _id: tokenPayload.id || tokenPayload._id || tokenPayload.sub
+            const mergedUser = {
+                email: pickFirstNonEmpty(storedUser.email, tokenPayload.email),
+                username: pickFirstNonEmpty(storedUser.username, tokenPayload.username, tokenPayload.name),
+                _id: pickFirstNonEmpty(storedUser._id, storedUser.id, tokenPayload.id, tokenPayload._id, tokenPayload.sub),
+                profilePicture: pickFirstNonEmpty(storedUser.profilePicture)
             };
-
-            const mergedUser = { ...tokenUser, ...storedUser };
             currentUserData = mergedUser;
+            localStorage.setItem('userData', JSON.stringify(currentUserData));
             applyUserDataToUI(currentUserData);
 
             try {

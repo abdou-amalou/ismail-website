@@ -213,6 +213,12 @@
                     }
 
                     console.log('Account created successfully!');
+                    const existingUserData = JSON.parse(localStorage.getItem('userData') || '{}');
+                    localStorage.setItem('userData', JSON.stringify({
+                        ...existingUserData,
+                        username,
+                        email
+                    }));
                     showNotification('Account created successfully! Redirecting to login...', 'success');
 
                     setTimeout(() => {
