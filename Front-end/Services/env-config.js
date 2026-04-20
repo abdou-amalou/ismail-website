@@ -1,5 +1,5 @@
 (function () {
-    const FALLBACK_URL = 'https://smail-app-production.up.railway.app';
+    const FALLBACK_URL = 'https://smail-back-ijbb.onrender.com';
     let apiUrl = FALLBACK_URL;
     let loadPromise = null;
 
