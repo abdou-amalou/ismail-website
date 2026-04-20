@@ -19,10 +19,11 @@
             <p>Home</p>
         </div></a>
     </div>
-    <p class = "chapter-name">Chapter One : Premiere Pro Basics</p>
+    <p class = "chapter-name" id="chapter-name">Chapter</p>
     <div class="middle">
         <div class="video">
-            <div class="play-button">
+            <video id="video-player" class="video-player" controls preload="metadata"></video>
+            <div id="video-placeholder" class="play-button">
                 <svg class = "play-svg" width="27" height="31" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M26.25 15.1553L0 30.3107L0 -0.000170708L26.25 15.1553Z" fill="white"/>
                 </svg>
@@ -31,39 +32,260 @@
         <div class="playlist">
             <p class = "lessons">Lessons</p>
             <hr>
-            <div class="lesson">
-                <p class = "lesson-title">1. Introduction to Premiere Pro</p>
-                <p class = "lesson-duration">7:23</p>
-            </div>
-            <div class="lesson">
-                <p class = "lesson-title">2. Interface overview</p>
-                <p class = "lesson-duration">7:23</p>
-            </div>
-            <div class="lesson">
-                <p class = "lesson-title">3. Basic tools & shortcuts</p>
-                <p class = "lesson-duration">7:23</p>
-            </div>
-            <div class="lesson">
-                <p class = "lesson-title">4. Working with timeline</p>
-                <p class = "lesson-duration">7:23</p>
-            </div>
-            <div class="lesson">
-                <p class = "lesson-title">5. Saving your project</p>
-                <p class = "lesson-duration">7:23</p>
-            </div>
+            <div id="lessons-container"></div>
         </div>
     </div>
         <p class = "currently-watching">Currently Watching</p>
-        <p>Lesson2 - Interface overview</p>
+        <p id="current-lesson-label">Select a lesson to start watching</p>
     <div class="previous-next-lesson">
-        <div class="previous-lesson">
+        <div class="previous-lesson" id="previous-lesson-btn">
             <img src="../../image/course-video-pictures/previous-next-lesson-arrow.svg" alt="">
             <p>Previous Lesson</p>
         </div>
-        <div class="next-lesson">
+        <div class="next-lesson" id="next-lesson-btn">
             <p>Next Lesson</p>
             <img class = "next-lesson-image"src="../../image/course-video-pictures/previous-next-lesson-arrow.svg" alt="">
         </div>
     </div>
+
+    <script src="../../Services/env-config.js"></script>
+    <script>
+        const FALLBACK_COURSE_SLUG = 'masterclasseditgn';
+        const params = new URLSearchParams(window.location.search);
+        const courseSlug = params.get('courseSlug') || FALLBACK_COURSE_SLUG;
+        const chapterOrderFromUrl = Number(params.get('chapterOrder') || 1);
+        const videoIdFromUrl = params.get('videoId') || '';
+
+        const chapterNameElement = document.getElementById('chapter-name');
+        const lessonsContainer = document.getElementById('lessons-container');
+        const currentLessonLabel = document.getElementById('current-lesson-label');
+        const previousLessonBtn = document.getElementById('previous-lesson-btn');
+        const nextLessonBtn = document.getElementById('next-lesson-btn');
+        const videoPlayer = document.getElementById('video-player');
+        const videoPlaceholder = document.getElementById('video-placeholder');
+
+        let BACKEND_URL = '';
+        let chapterVideos = [];
+        let currentLessonIndex = -1;
+        let markWatchedTimer = null;
+
+        function authHeaders() {
+            const token = localStorage.getItem('token');
+            return token ? { Authorization: `Bearer ${token}` } : {};
+        }
+
+        function formatDuration(seconds) {
+            const safe = Number(seconds);
+            if (!Number.isFinite(safe) || safe <= 0) {
+                return '0:00';
+            }
+
+            const mins = Math.floor(safe / 60);
+            const secs = Math.floor(safe % 60).toString().padStart(2, '0');
+            return `${mins}:${secs}`;
+        }
+
+        function getChapterAndVideos(payload) {
+            const course = payload?.course || payload || {};
+            const chapters = Array.isArray(course.chapters) ? course.chapters : (Array.isArray(payload?.chapters) ? payload.chapters : []);
+            const videos = Array.isArray(course.videos) ? course.videos : (Array.isArray(payload?.videos) ? payload.videos : []);
+
+            const chapter = chapters.find((item) => Number(item?.order || 0) === chapterOrderFromUrl) || chapters[0] || null;
+            const chapterOrder = Number(chapter?.order || chapterOrderFromUrl || 1);
+            const chapterName = chapter?.title || `Chapter ${chapterOrder}`;
+            const chapterId = chapter?._id || chapter?.id;
+
+            const filteredVideos = videos
+                .filter((video) => {
+                    if (video?.chapterId && chapterId) {
+                        return String(video.chapterId) === String(chapterId);
+                    }
+
+                    return Number(video?.chapterOrder || 0) === chapterOrder;
+                })
+                .sort((a, b) => Number(a?.order || 0) - Number(b?.order || 0));
+
+            return { chapterName, filteredVideos };
+        }
+
+        function renderPlaylist() {
+            lessonsContainer.innerHTML = chapterVideos.map((video, index) => {
+                const videoId = video?._id || video?.id;
+                const isActive = index === currentLessonIndex;
+                const title = video?.title || `Lesson ${index + 1}`;
+
+                return `
+                    <div class="lesson ${isActive ? 'active' : ''}" data-video-id="${videoId}" data-index="${index}">
+                        <p class="lesson-title">${index + 1}. ${title}</p>
+                        <p class="lesson-duration">${formatDuration(video?.duration)}</p>
+                    </div>
+                `;
+            }).join('');
+
+            lessonsContainer.querySelectorAll('.lesson').forEach((lessonElement) => {
+                lessonElement.addEventListener('click', () => {
+                    const lessonIndex = Number(lessonElement.dataset.index);
+                    if (!Number.isFinite(lessonIndex)) {
+                        return;
+                    }
+
+                    selectLesson(lessonIndex, true);
+                });
+            });
+        }
+
+        async function fetchSignedVideoUrl(videoId) {
+            const response = await fetch(`${BACKEND_URL}/api/videos/${encodeURIComponent(videoId)}/url`, {
+                method: 'GET',
+                headers: {
+                    ...authHeaders()
+                }
+            });
+
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || !data.url) {
+                throw new Error(data.message || 'Unable to load video URL.');
+            }
+
+            return data.url;
+        }
+
+        async function sendMarkWatched(videoId, watchedDuration) {
+            if (!localStorage.getItem('token')) {
+                return;
+            }
+
+            await fetch(`${BACKEND_URL}/api/videos/${encodeURIComponent(videoId)}/mark-watched`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...authHeaders()
+                },
+                body: JSON.stringify({ watchedDuration: Math.max(0, Math.floor(watchedDuration)) })
+            });
+        }
+
+        function scheduleMarkWatched(videoId) {
+            if (markWatchedTimer) {
+                clearTimeout(markWatchedTimer);
+            }
+
+            markWatchedTimer = setTimeout(() => {
+                sendMarkWatched(videoId, videoPlayer.currentTime).catch(() => {});
+            }, 12000);
+        }
+
+        function updateLessonButtons() {
+            previousLessonBtn.style.opacity = currentLessonIndex <= 0 ? '0.45' : '1';
+            nextLessonBtn.style.opacity = currentLessonIndex >= chapterVideos.length - 1 ? '0.45' : '1';
+        }
+
+        async function selectLesson(index, pushUrl) {
+            if (index < 0 || index >= chapterVideos.length) {
+                return;
+            }
+
+            currentLessonIndex = index;
+            const lesson = chapterVideos[currentLessonIndex];
+            const lessonId = lesson?._id || lesson?.id;
+
+            currentLessonLabel.textContent = `${currentLessonIndex + 1}. ${lesson?.title || 'Lesson'}`;
+            renderPlaylist();
+            updateLessonButtons();
+
+            try {
+                const signedUrl = await fetchSignedVideoUrl(lessonId);
+                videoPlayer.src = signedUrl;
+                videoPlayer.load();
+                videoPlaceholder.style.display = 'none';
+                videoPlayer.style.display = 'block';
+
+                if (pushUrl) {
+                    const nextUrl = `?courseSlug=${encodeURIComponent(courseSlug)}&chapterOrder=${encodeURIComponent(chapterOrderFromUrl)}&videoId=${encodeURIComponent(lessonId)}`;
+                    window.history.replaceState({}, '', nextUrl);
+                }
+            } catch (error) {
+                currentLessonLabel.textContent = error.message || 'Unable to play this lesson.';
+            }
+        }
+
+        async function init() {
+            try {
+                await window.ENV_CONFIG.load();
+                BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
+
+                const response = await fetch(`${BACKEND_URL}/api/courses/${encodeURIComponent(courseSlug)}`, {
+                    method: 'GET',
+                    headers: {
+                        ...authHeaders()
+                    }
+                });
+
+                const payload = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(payload.message || 'Failed to load course data.');
+                }
+
+                const { chapterName, filteredVideos } = getChapterAndVideos(payload);
+                chapterVideos = filteredVideos;
+                chapterNameElement.textContent = chapterName;
+
+                if (!chapterVideos.length) {
+                    lessonsContainer.innerHTML = '<p class="lesson-title">No lessons available for this chapter yet.</p>';
+                    currentLessonLabel.textContent = 'No lesson available';
+                    return;
+                }
+
+                const selectedIndex = chapterVideos.findIndex((video) => String(video?._id || video?.id) === String(videoIdFromUrl));
+                currentLessonIndex = selectedIndex >= 0 ? selectedIndex : 0;
+
+                renderPlaylist();
+                await selectLesson(currentLessonIndex, false);
+            } catch (error) {
+                chapterNameElement.textContent = 'Unable to load chapter';
+                currentLessonLabel.textContent = error.message || 'Please try again later.';
+            }
+        }
+
+        previousLessonBtn.addEventListener('click', function () {
+            if (currentLessonIndex > 0) {
+                selectLesson(currentLessonIndex - 1, true);
+            }
+        });
+
+        nextLessonBtn.addEventListener('click', function () {
+            if (currentLessonIndex < chapterVideos.length - 1) {
+                selectLesson(currentLessonIndex + 1, true);
+            }
+        });
+
+        videoPlayer.addEventListener('timeupdate', function () {
+            const lesson = chapterVideos[currentLessonIndex];
+            const lessonId = lesson?._id || lesson?.id;
+            if (!lessonId) {
+                return;
+            }
+
+            scheduleMarkWatched(lessonId);
+        });
+
+        videoPlayer.addEventListener('pause', function () {
+            const lesson = chapterVideos[currentLessonIndex];
+            const lessonId = lesson?._id || lesson?.id;
+            if (lessonId) {
+                sendMarkWatched(lessonId, videoPlayer.currentTime).catch(() => {});
+            }
+        });
+
+        videoPlayer.addEventListener('ended', function () {
+            const lesson = chapterVideos[currentLessonIndex];
+            const lessonId = lesson?._id || lesson?.id;
+            if (lessonId) {
+                sendMarkWatched(lessonId, videoPlayer.duration || videoPlayer.currentTime).catch(() => {});
+            }
+        });
+
+        init();
+    </script>
 </body>
 </html>

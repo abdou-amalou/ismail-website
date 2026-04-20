@@ -72,7 +72,7 @@
                 await window.ENV_CONFIG.load();
                 const BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
 
-                const loginRes = await fetch(`${BACKEND_URL}/api/auth/login`, {
+                const loginRes = await fetch(`${BACKEND_URL}/api/auth/admin-login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

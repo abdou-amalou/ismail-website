@@ -10,73 +10,205 @@
     <p class = "header">The Complete Video Editing Masterclass</p>
     <p class = "sub-header">Track your progress and continue learning at your own place</p>
     <div class = "all-progress-bar"></div>
-    <p class = "percentage-of-progress">70% Complete</p>
-    <div class="chapters">
-        <a class="chapter-link" href="../course-video/course-video.html">
-            <div class="chapter">
-                <div class="title-and-number">
-                    <p class = "chapter-title">Premiere Pro basics</p>
-                    <p class = "number">1</p>
-                </div>
-                <div class="lessons-and-duration">
-                    <p class = "lessons">5 Lessons</p>
-                    <p class = "duration">•1h 30min</p>
-                </div>
-                <div class="chapter-progress">
-                    <div class="chapter-progress-bar"></div>
-                    <p class = "chapter-progress-percentage">100%</p>
-                </div>
-            </div>
-        </a>
-        <a class="chapter-link" href="../course-video/course-video.html">
-            <div class="chapter">
-                <div class="title-and-number">
-                    <p class = "chapter-title">Essential Effects & Sound Design</p>
-                    <p class = "number">2</p>
-                </div>
-                <div class="lessons-and-duration">
-                    <p class = "lessons">4 Lessons</p>
-                    <p class = "duration">•38 min</p>
-                </div>
-                <div class="chapter-progress">
-                    <div class="chapter-progress-bar"></div>
-                    <p class = "chapter-progress-percentage">80%</p>
-                </div>
-            </div>
-        </a>
-        <a class="chapter-link" href="../course-video/course-video.html">
-            <div class="chapter">
-                <div class="title-and-number">
-                    <p class = "chapter-title">Real Project Practice</p>
-                    <p class = "number">3</p>
-                </div>
-                <div class="lessons-and-duration">
-                    <p class = "lessons">5 Lessons</p>
-                    <p class = "duration">•2h 38min</p>
-                </div>
-                <div class="chapter-progress">
-                    <div class="chapter-progress-bar"></div>
-                    <p class = "chapter-progress-percentage">0%</p>
-                </div>
-            </div>
-        </a>
-        <a class="chapter-link" href="../course-video/course-video.html">
-            <div class="chapter">
-                <div class="title-and-number">
-                    <p class = "chapter-title">How To Get Your First Client</p>
-                    <p class = "number">4</p>
-                </div>
-                <div class="lessons-and-duration">
-                    <p class = "lessons">5 Lessons</p>
-                    <p class = "duration">•2h 38min</p>
-                </div>
-                <div class="chapter-progress">
-                    <div class="chapter-progress-bar"></div>
-                    <p class = "chapter-progress-percentage">0%</p>
-                </div>
-            </div>
-        </a>
-    </div>
+    <p class = "percentage-of-progress">0% Complete</p>
+    <div class="chapters" id="chapters-container"></div>
     <a href="../landing page/index.html"><p class = "home-button">Home</p></a>
+
+    <script src="../../Services/env-config.js"></script>
+    <script>
+        const FALLBACK_COURSE_SLUG = 'masterclasseditgn';
+
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        function authHeaders() {
+            const token = getToken();
+            return token ? { Authorization: `Bearer ${token}` } : {};
+        }
+
+        function clampPercent(value) {
+            if (!Number.isFinite(value)) {
+                return 0;
+            }
+
+            return Math.max(0, Math.min(100, Math.round(value)));
+        }
+
+        function formatDuration(seconds) {
+            const safeSeconds = Number(seconds);
+            if (!Number.isFinite(safeSeconds) || safeSeconds <= 0) {
+                return '•0 min';
+            }
+
+            const totalMinutes = Math.round(safeSeconds / 60);
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+
+            if (hours === 0) {
+                return `•${minutes} min`;
+            }
+
+            return `•${hours}h ${minutes}min`;
+        }
+
+        function firstArray(value, fallback) {
+            if (Array.isArray(value)) {
+                return value;
+            }
+
+            return fallback;
+        }
+
+        function normalizeCoursePayload(payload) {
+            const course = payload?.course || payload || {};
+            const chapters = firstArray(course.chapters, firstArray(payload?.chapters, []));
+            const videos = firstArray(course.videos, firstArray(payload?.videos, []));
+
+            return {
+                title: course.title || 'The Complete Video Editing Masterclass',
+                progress: course.progress || payload?.progress || payload?.userProgress || {},
+                chapters,
+                videos
+            };
+        }
+
+        function computeChapterProgress(chapter, chapterVideos) {
+            const explicitProgress = chapter?.progressPercentage;
+            if (Number.isFinite(explicitProgress)) {
+                return clampPercent(explicitProgress);
+            }
+
+            if (!chapterVideos.length) {
+                return 0;
+            }
+
+            const progressFromVideos = chapterVideos.reduce((sum, video) => {
+                const watched = Number(video?.progressPercentage);
+                if (Number.isFinite(watched)) {
+                    return sum + clampPercent(watched);
+                }
+
+                if (video?.isWatched === true || video?.watched === true) {
+                    return sum + 100;
+                }
+
+                return sum;
+            }, 0);
+
+            return clampPercent(progressFromVideos / chapterVideos.length);
+        }
+
+        function getOverallProgress(courseData, chapterSummaries) {
+            const byCourseProgress = Number(courseData.progress?.overallPercentage ?? courseData.progress?.coursePercentage);
+            if (Number.isFinite(byCourseProgress)) {
+                return clampPercent(byCourseProgress);
+            }
+
+            if (!chapterSummaries.length) {
+                return 0;
+            }
+
+            const total = chapterSummaries.reduce((sum, chapter) => sum + chapter.progress, 0);
+            return clampPercent(total / chapterSummaries.length);
+        }
+
+        function renderChapters(courseData, courseSlug) {
+            const container = document.getElementById('chapters-container');
+            const allProgressBar = document.querySelector('.all-progress-bar');
+            const allProgressLabel = document.querySelector('.percentage-of-progress');
+
+            const chapterSummaries = courseData.chapters.map((chapter, index) => {
+                const chapterId = chapter?._id || chapter?.id;
+                const relatedVideos = courseData.videos.filter((video) => {
+                    if (video?.chapterId && chapterId) {
+                        return String(video.chapterId) === String(chapterId);
+                    }
+
+                    return Number(video?.chapterOrder || 0) === Number(chapter?.order || index + 1);
+                });
+
+                const videoCount = relatedVideos.length;
+                const durationSum = relatedVideos.reduce((sum, video) => sum + Number(video?.duration || 0), 0);
+                const progress = computeChapterProgress(chapter, relatedVideos);
+
+                return {
+                    chapter,
+                    index,
+                    progress,
+                    videoCount,
+                    durationSum,
+                    firstVideoId: relatedVideos[0]?._id || relatedVideos[0]?.id || ''
+                };
+            });
+
+            const overallProgress = getOverallProgress(courseData, chapterSummaries);
+            allProgressBar.style.setProperty('--progress', `${overallProgress}%`);
+            allProgressLabel.textContent = `${overallProgress}% Complete`;
+
+            container.innerHTML = chapterSummaries.map((entry) => {
+                const chapter = entry.chapter;
+                const chapterOrder = Number(chapter?.order || entry.index + 1);
+                const chapterTitle = chapter?.title || `Chapter ${chapterOrder}`;
+                const lessonsText = `${entry.videoCount} ${entry.videoCount === 1 ? 'Lesson' : 'Lessons'}`;
+                const durationText = formatDuration(entry.durationSum);
+                const chapterHref = `../course-video/course-video.html?courseSlug=${encodeURIComponent(courseSlug)}&chapterOrder=${chapterOrder}${entry.firstVideoId ? `&videoId=${encodeURIComponent(entry.firstVideoId)}` : ''}`;
+
+                return `
+                    <a class="chapter-link" href="${chapterHref}">
+                        <div class="chapter">
+                            <div class="title-and-number">
+                                <p class="chapter-title">${chapterTitle}</p>
+                                <p class="number">${chapterOrder}</p>
+                            </div>
+                            <div class="lessons-and-duration">
+                                <p class="lessons">${lessonsText}</p>
+                                <p class="duration">${durationText}</p>
+                            </div>
+                            <div class="chapter-progress">
+                                <div class="chapter-progress-bar" style="--progress: ${entry.progress}%"></div>
+                                <p class="chapter-progress-percentage">${entry.progress}%</p>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        async function loadChaptersPage() {
+            const params = new URLSearchParams(window.location.search);
+            const courseSlug = params.get('courseSlug') || FALLBACK_COURSE_SLUG;
+
+            try {
+                await window.ENV_CONFIG.load();
+                const BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
+
+                const response = await fetch(`${BACKEND_URL}/api/courses/${encodeURIComponent(courseSlug)}`, {
+                    method: 'GET',
+                    headers: {
+                        ...authHeaders()
+                    }
+                });
+
+                const payload = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(payload.message || 'Failed to load course chapters.');
+                }
+
+                const normalized = normalizeCoursePayload(payload);
+                renderChapters(normalized, courseSlug);
+            } catch (error) {
+                const container = document.getElementById('chapters-container');
+                container.innerHTML = `
+                    <div class="chapter">
+                        <p class="chapter-title">Unable to load chapters</p>
+                        <p class="lessons">${error.message || 'Please try again later.'}</p>
+                    </div>
+                `;
+            }
+        }
+
+        loadChaptersPage();
+    </script>
 </body>
 </html>
