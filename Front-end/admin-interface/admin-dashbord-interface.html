@@ -104,6 +104,120 @@
         </form>
       </div>
     </section>
+
+    <section class="panel upload-panel">
+      <div class="panel-header">
+        <h2>Formation Management</h2>
+      </div>
+
+      <div class="upload-grid">
+        <form id="createCourseForm" class="upload-form" novalidate>
+          <h3>Create Course</h3>
+          <p class="form-hint">POST /api/admin/courses</p>
+
+          <label for="courseTitle">Title</label>
+          <input id="courseTitle" type="text" placeholder="Masterclass Editing" required>
+
+          <label for="courseSlug">Slug</label>
+          <input id="courseSlug" type="text" placeholder="masterclasseditgn" required>
+
+          <label for="courseDescription">Description</label>
+          <textarea id="courseDescription" rows="3" placeholder="Formation complete montage video" required></textarea>
+
+          <button type="submit" class="toggle-status">Create Course</button>
+          <p id="createCourseStatus" class="upload-status" aria-live="polite"></p>
+        </form>
+
+        <form id="createChapterForm" class="upload-form" novalidate>
+          <h3>Create Chapter</h3>
+          <p class="form-hint">POST /api/admin/chapters</p>
+
+          <label for="chapterCourseId">Course</label>
+          <select id="chapterCourseId" required></select>
+
+          <label for="chapterTitle">Title</label>
+          <input id="chapterTitle" type="text" placeholder="Chapitre 1" required>
+
+          <label for="chapterOrder">Order</label>
+          <input id="chapterOrder" type="number" min="1" placeholder="1" required>
+
+          <label for="chapterDescription">Description</label>
+          <textarea id="chapterDescription" rows="3" placeholder="Introduction" required></textarea>
+
+          <button type="submit" class="toggle-status">Create Chapter</button>
+          <p id="createChapterStatus" class="upload-status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <div class="management-tools">
+        <div class="tool-row">
+          <label for="manageCourseSelect">Course</label>
+          <select id="manageCourseSelect"></select>
+          <button id="refreshCoursesBtn" type="button" class="toggle-status">Refresh Courses</button>
+          <button id="loadChaptersBtn" type="button" class="toggle-status">Load Chapters</button>
+        </div>
+
+        <div class="tool-row">
+          <label for="manageChapterSelect">Chapter</label>
+          <select id="manageChapterSelect"></select>
+          <button id="loadVideosBtn" type="button" class="toggle-status">Load Videos</button>
+        </div>
+
+        <p id="manageStatus" class="upload-status" aria-live="polite"></p>
+      </div>
+
+      <div class="data-grid">
+        <div class="data-card">
+          <h3>Courses</h3>
+          <div class="table-wrap">
+            <table class="users-table small-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Slug</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="coursesBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="data-card">
+          <h3>Chapters (Selected Course)</h3>
+          <div class="table-wrap">
+            <table class="users-table small-table">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Title</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="chaptersBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="data-card data-card-wide">
+          <h3>Videos (Selected Chapter)</h3>
+          <div class="table-wrap">
+            <table class="users-table small-table">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Title</th>
+                  <th>Duration</th>
+                  <th>Active</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="videosBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
 <script src="../Services/env-config.js"></script>
@@ -120,6 +234,24 @@
   const createVideoForm = document.getElementById('createVideoForm');
   const uploadFileStatus = document.getElementById('uploadFileStatus');
   const createVideoStatus = document.getElementById('createVideoStatus');
+  const createCourseForm = document.getElementById('createCourseForm');
+  const createChapterForm = document.getElementById('createChapterForm');
+  const createCourseStatus = document.getElementById('createCourseStatus');
+  const createChapterStatus = document.getElementById('createChapterStatus');
+  const manageStatus = document.getElementById('manageStatus');
+  const chapterCourseId = document.getElementById('chapterCourseId');
+  const manageCourseSelect = document.getElementById('manageCourseSelect');
+  const manageChapterSelect = document.getElementById('manageChapterSelect');
+  const coursesBody = document.getElementById('coursesBody');
+  const chaptersBody = document.getElementById('chaptersBody');
+  const videosBody = document.getElementById('videosBody');
+  const refreshCoursesBtn = document.getElementById('refreshCoursesBtn');
+  const loadChaptersBtn = document.getElementById('loadChaptersBtn');
+  const loadVideosBtn = document.getElementById('loadVideosBtn');
+
+  let courses = [];
+  let chapters = [];
+  let videos = [];
 
   function getAuthHeaders() {
     const token = localStorage.getItem('token');
@@ -161,9 +293,354 @@
   }
 
   function setStatus(element, message, isError = false) {
+    if (!element) {
+      return;
+    }
+
     element.textContent = message;
     element.classList.toggle('error', isError);
     element.classList.toggle('success', !isError);
+  }
+
+  function getItemId(item) {
+    return item?._id || item?.id || '';
+  }
+
+  function toArray(value, fallback = []) {
+    return Array.isArray(value) ? value : fallback;
+  }
+
+  function getCoursesFromPayload(data) {
+    return toArray(data?.courses, toArray(data?.data, toArray(data, [])));
+  }
+
+  function getChaptersFromPayload(data) {
+    return toArray(data?.chapters, toArray(data?.data, toArray(data, [])));
+  }
+
+  function getVideosFromPayload(data) {
+    return toArray(data?.videos, toArray(data?.data, toArray(data, [])));
+  }
+
+  function fillSelect(selectElement, options, { placeholder, selectedValue = '' } = {}) {
+    const currentValue = selectedValue || selectElement.value;
+
+    const optionHtml = options.map((option) => {
+      const value = String(option.value);
+      const isSelected = value === String(currentValue) ? 'selected' : '';
+      return `<option value="${value}" ${isSelected}>${option.label}</option>`;
+    }).join('');
+
+    if (placeholder) {
+      selectElement.innerHTML = `<option value="">${placeholder}</option>${optionHtml}`;
+    } else {
+      selectElement.innerHTML = optionHtml;
+    }
+  }
+
+  function syncCourseInputsFromSelection() {
+    const courseId = manageCourseSelect.value;
+    const selectedCourse = courses.find((course) => String(getItemId(course)) === String(courseId));
+    if (!selectedCourse) {
+      return;
+    }
+
+    const courseSlug = selectedCourse.slug || '';
+
+    if (courseSlug) {
+      document.getElementById('uploadCourseSlug').value = courseSlug;
+      document.getElementById('metaCourseSlug').value = courseSlug;
+    }
+
+    chapterCourseId.value = String(getItemId(selectedCourse));
+  }
+
+  function syncChapterOrderInput() {
+    const chapterId = manageChapterSelect.value;
+    const selectedChapter = chapters.find((chapter) => String(getItemId(chapter)) === String(chapterId));
+    if (!selectedChapter) {
+      return;
+    }
+
+    if (Number.isFinite(Number(selectedChapter.order))) {
+      document.getElementById('uploadChapterOrder').value = Number(selectedChapter.order);
+    }
+  }
+
+  function renderCourses() {
+    coursesBody.innerHTML = courses.map((course) => {
+      const id = getItemId(course);
+      return `
+        <tr>
+          <td>${course.title || '-'}</td>
+          <td>${course.slug || '-'}</td>
+          <td><button class="toggle-status" data-action="delete-course" data-id="${id}">Delete</button></td>
+        </tr>
+      `;
+    }).join('');
+
+    const options = courses.map((course) => ({
+      value: String(getItemId(course)),
+      label: `${course.title || 'Untitled'} (${course.slug || 'no-slug'})`
+    }));
+
+    fillSelect(chapterCourseId, options, { placeholder: 'Select a course' });
+    fillSelect(manageCourseSelect, options, { placeholder: 'Select a course' });
+  }
+
+  function renderChapters() {
+    chaptersBody.innerHTML = chapters.map((chapter) => {
+      const id = getItemId(chapter);
+      return `
+        <tr>
+          <td>${chapter.order ?? '-'}</td>
+          <td>${chapter.title || '-'}</td>
+          <td><button class="toggle-status" data-action="delete-chapter" data-id="${id}">Delete</button></td>
+        </tr>
+      `;
+    }).join('');
+
+    const options = chapters.map((chapter) => ({
+      value: String(getItemId(chapter)),
+      label: `#${chapter.order ?? '-'} - ${chapter.title || 'Untitled'}`
+    }));
+
+    fillSelect(manageChapterSelect, options, { placeholder: 'Select a chapter' });
+  }
+
+  function renderVideos() {
+    videosBody.innerHTML = videos.map((video) => {
+      const id = getItemId(video);
+      const isActive = video.isActive !== false;
+
+      return `
+        <tr>
+          <td>${video.order ?? '-'}</td>
+          <td>${video.title || '-'}</td>
+          <td>${video.duration ?? '-'}s</td>
+          <td>
+            <span class="status-pill ${isActive ? 'status-payed' : 'status-not-payed'}">
+              ${isActive ? 'active' : 'inactive'}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <button class="toggle-status" data-action="toggle-video" data-id="${id}" data-active="${isActive}">
+              ${isActive ? 'Set Inactive' : 'Set Active'}
+            </button>
+            <button class="toggle-status" data-action="delete-video" data-id="${id}">Delete</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  async function loadCourses() {
+    const data = await api('/api/admin/courses', { method: 'GET' });
+    courses = getCoursesFromPayload(data);
+    renderCourses();
+
+    if (!courses.length) {
+      chapters = [];
+      videos = [];
+      renderChapters();
+      renderVideos();
+      setStatus(manageStatus, 'No courses found yet. Create your first course.', false);
+      return;
+    }
+
+    manageCourseSelect.value = String(getItemId(courses[0]));
+    chapterCourseId.value = String(getItemId(courses[0]));
+    syncCourseInputsFromSelection();
+    await loadChaptersForCourse(manageCourseSelect.value);
+  }
+
+  async function loadChaptersForCourse(courseId) {
+    if (!courseId) {
+      chapters = [];
+      videos = [];
+      renderChapters();
+      renderVideos();
+      return;
+    }
+
+    const data = await api(`/api/admin/courses/${courseId}/chapters`, { method: 'GET' });
+    chapters = getChaptersFromPayload(data);
+    renderChapters();
+
+    if (!chapters.length) {
+      videos = [];
+      renderVideos();
+      setStatus(manageStatus, 'No chapters found for this course.', false);
+      return;
+    }
+
+    manageChapterSelect.value = String(getItemId(chapters[0]));
+    syncChapterOrderInput();
+    await loadVideosForChapter(manageChapterSelect.value);
+  }
+
+  async function loadVideosForChapter(chapterId) {
+    if (!chapterId) {
+      videos = [];
+      renderVideos();
+      return;
+    }
+
+    const data = await api(`/api/admin/chapters/${chapterId}/videos`, { method: 'GET' });
+    videos = getVideosFromPayload(data);
+    renderVideos();
+  }
+
+  async function handleCreateCourse(event) {
+    event.preventDefault();
+
+    const payload = {
+      title: document.getElementById('courseTitle').value.trim(),
+      slug: document.getElementById('courseSlug').value.trim(),
+      description: document.getElementById('courseDescription').value.trim()
+    };
+
+    if (!payload.title || !payload.slug || !payload.description) {
+      setStatus(createCourseStatus, 'Please fill all course fields.', true);
+      return;
+    }
+
+    setStatus(createCourseStatus, 'Creating course...');
+
+    try {
+      await api('/api/admin/courses', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+
+      setStatus(createCourseStatus, 'Course created successfully.');
+      createCourseForm.reset();
+      await loadCourses();
+    } catch (error) {
+      setStatus(createCourseStatus, error.message || 'Failed to create course.', true);
+    }
+  }
+
+  async function handleCreateChapter(event) {
+    event.preventDefault();
+
+    const payload = {
+      courseId: chapterCourseId.value,
+      title: document.getElementById('chapterTitle').value.trim(),
+      order: Number(document.getElementById('chapterOrder').value),
+      description: document.getElementById('chapterDescription').value.trim()
+    };
+
+    if (!payload.courseId || !payload.title || !payload.description) {
+      setStatus(createChapterStatus, 'Please fill all chapter fields.', true);
+      return;
+    }
+
+    if (!Number.isFinite(payload.order) || payload.order < 1) {
+      setStatus(createChapterStatus, 'Chapter order must be a valid number greater than 0.', true);
+      return;
+    }
+
+    setStatus(createChapterStatus, 'Creating chapter...');
+
+    try {
+      await api('/api/admin/chapters', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+
+      setStatus(createChapterStatus, 'Chapter created successfully.');
+      createChapterForm.reset();
+      manageCourseSelect.value = payload.courseId;
+      await loadChaptersForCourse(payload.courseId);
+    } catch (error) {
+      setStatus(createChapterStatus, error.message || 'Failed to create chapter.', true);
+    }
+  }
+
+  async function handleCourseActions(event) {
+    const button = event.target.closest('button[data-action="delete-course"]');
+    if (!button) {
+      return;
+    }
+
+    const courseId = button.dataset.id;
+    if (!courseId) {
+      return;
+    }
+
+    if (!window.confirm('Delete this course? This will remove its chapters and videos in MongoDB.')) {
+      return;
+    }
+
+    try {
+      await api(`/api/admin/courses/${courseId}`, { method: 'DELETE' });
+      setStatus(manageStatus, 'Course deleted successfully.');
+      await loadCourses();
+    } catch (error) {
+      setStatus(manageStatus, error.message || 'Failed to delete course.', true);
+    }
+  }
+
+  async function handleChapterActions(event) {
+    const button = event.target.closest('button[data-action="delete-chapter"]');
+    if (!button) {
+      return;
+    }
+
+    const chapterId = button.dataset.id;
+    if (!chapterId) {
+      return;
+    }
+
+    if (!window.confirm('Delete this chapter?')) {
+      return;
+    }
+
+    try {
+      await api(`/api/admin/chapters/${chapterId}`, { method: 'DELETE' });
+      setStatus(manageStatus, 'Chapter deleted successfully.');
+      await loadChaptersForCourse(manageCourseSelect.value);
+    } catch (error) {
+      setStatus(manageStatus, error.message || 'Failed to delete chapter.', true);
+    }
+  }
+
+  async function handleVideoActions(event) {
+    const button = event.target.closest('button[data-action]');
+    if (!button) {
+      return;
+    }
+
+    const action = button.dataset.action;
+    const videoId = button.dataset.id;
+    if (!videoId) {
+      return;
+    }
+
+    try {
+      if (action === 'toggle-video') {
+        const isCurrentlyActive = button.dataset.active === 'true';
+        await api(`/api/admin/videos/${videoId}`, {
+          method: 'PUT',
+          body: JSON.stringify({ isActive: !isCurrentlyActive })
+        });
+        setStatus(manageStatus, 'Video status updated.');
+      }
+
+      if (action === 'delete-video') {
+        if (!window.confirm('Delete this video entry from MongoDB?')) {
+          return;
+        }
+
+        await api(`/api/admin/videos/${videoId}`, { method: 'DELETE' });
+        setStatus(manageStatus, 'Video deleted successfully.');
+      }
+
+      await loadVideosForChapter(manageChapterSelect.value);
+    } catch (error) {
+      setStatus(manageStatus, error.message || 'Failed to update video.', true);
+    }
   }
 
   async function handleUploadFile(event) {
@@ -253,6 +730,7 @@
 
       setStatus(createVideoStatus, 'Video created successfully. You can upload another one now.');
       createVideoForm.reset();
+      await loadVideosForChapter(manageChapterSelect.value);
     } catch (error) {
       setStatus(createVideoStatus, error.message || 'Failed to create video.', true);
       if (error.message && error.message.toLowerCase().includes('session expired')) {
@@ -331,10 +809,14 @@
       const data = await api('/api/dashboardinformation/clients', { method: 'GET' });
       users = Array.isArray(data.clients) ? data.clients : [];
       renderUsers();
+
+      await loadCourses();
     } catch (error) {
       loadingState.textContent = error.message || 'Failed to load clients.';
       loadingState.hidden = false;
       usersTable.hidden = true;
+
+      setStatus(manageStatus, error.message || 'Failed to load admin data.', true);
 
       if (error.message && error.message.toLowerCase().includes('session expired')) {
         setTimeout(redirectToLogin, 800);
@@ -351,6 +833,29 @@
 
   uploadFileForm.addEventListener('submit', handleUploadFile);
   createVideoForm.addEventListener('submit', handleCreateVideo);
+  createCourseForm.addEventListener('submit', handleCreateCourse);
+  createChapterForm.addEventListener('submit', handleCreateChapter);
+  coursesBody.addEventListener('click', handleCourseActions);
+  chaptersBody.addEventListener('click', handleChapterActions);
+  videosBody.addEventListener('click', handleVideoActions);
+
+  manageCourseSelect.addEventListener('change', async function () {
+    syncCourseInputsFromSelection();
+    await loadChaptersForCourse(manageCourseSelect.value);
+  });
+
+  manageChapterSelect.addEventListener('change', async function () {
+    syncChapterOrderInput();
+    await loadVideosForChapter(manageChapterSelect.value);
+  });
+
+  refreshCoursesBtn.addEventListener('click', loadCourses);
+  loadChaptersBtn.addEventListener('click', async function () {
+    await loadChaptersForCourse(manageCourseSelect.value);
+  });
+  loadVideosBtn.addEventListener('click', async function () {
+    await loadVideosForChapter(manageChapterSelect.value);
+  });
 
   loadClients();
 </script>

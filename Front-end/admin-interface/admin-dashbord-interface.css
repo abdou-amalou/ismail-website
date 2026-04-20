@@ -227,7 +227,9 @@ body {
 }
 
 .upload-form input,
-.upload-form textarea {
+.upload-form textarea,
+.upload-form select,
+.management-tools select {
   width: 100%;
   background: var(--panel-2);
   border: 1px solid var(--line);
@@ -245,7 +247,9 @@ body {
 }
 
 .upload-form input:focus,
-.upload-form textarea:focus {
+.upload-form textarea:focus,
+.upload-form select:focus,
+.management-tools select:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
@@ -269,6 +273,65 @@ body {
   color: var(--pending-text);
 }
 
+.management-tools {
+  padding: 0 18px 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.tool-row {
+  display: grid;
+  grid-template-columns: 90px 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.tool-row label {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.data-grid {
+  padding: 0 18px 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.data-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+
+.data-card h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.98rem;
+  font-weight: 600;
+  padding: 12px 12px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.data-card-wide {
+  grid-column: 1 / -1;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.small-table th,
+.small-table td {
+  padding: 10px 12px;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 980px) {
   .dashboard {
     width: 96vw;
@@ -284,6 +347,14 @@ body {
   }
 
   .upload-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tool-row {
+    grid-template-columns: 1fr;
+  }
+
+  .data-grid {
     grid-template-columns: 1fr;
   }
 }
