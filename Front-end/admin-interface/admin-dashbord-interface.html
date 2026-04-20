@@ -47,6 +47,63 @@
       </table>
       <p class="empty-state" id="emptyState" hidden>No student found for this email.</p>
     </section>
+
+    <section class="panel upload-panel">
+      <div class="panel-header">
+        <h2>Upload Course Video</h2>
+      </div>
+
+      <div class="upload-grid">
+        <form id="uploadFileForm" class="upload-form" novalidate>
+          <h3>Step 1: Upload File</h3>
+          <p class="form-hint">Sends the raw video to backend upload route.</p>
+
+          <label for="videoFile">Video File</label>
+          <input id="videoFile" name="video" type="file" accept="video/*" required>
+
+          <label for="uploadTitle">Title (optional)</label>
+          <input id="uploadTitle" name="title" type="text" placeholder="Video 1">
+
+          <label for="uploadCourseSlug">Course Slug (optional)</label>
+          <input id="uploadCourseSlug" name="courseSlug" type="text" placeholder="masterclasseditgn">
+
+          <label for="uploadChapterOrder">Chapter Order (optional)</label>
+          <input id="uploadChapterOrder" name="chapterOrder" type="number" min="0" placeholder="1">
+
+          <button type="submit" class="toggle-status">Upload To Storage</button>
+          <p id="uploadFileStatus" class="upload-status" aria-live="polite"></p>
+        </form>
+
+        <form id="createVideoForm" class="upload-form" novalidate>
+          <h3>Step 2: Create Video Entry</h3>
+          <p class="form-hint">Creates Mongo video using b2 fields returned by Step 1.</p>
+
+          <label for="metaCourseSlug">Course Slug</label>
+          <input id="metaCourseSlug" name="courseSlug" type="text" placeholder="masterclasseditgn" required>
+
+          <label for="metaTitle">Video Title</label>
+          <input id="metaTitle" name="title" type="text" placeholder="Video 1" required>
+
+          <label for="metaOrder">Order</label>
+          <input id="metaOrder" name="order" type="number" min="1" placeholder="1" required>
+
+          <label for="metaDuration">Duration (seconds)</label>
+          <input id="metaDuration" name="duration" type="number" min="1" placeholder="540" required>
+
+          <label for="metaDescription">Description</label>
+          <textarea id="metaDescription" name="description" rows="3" placeholder="Premiere video" required></textarea>
+
+          <label for="metaB2FileId">b2FileId (from step 1 fileId)</label>
+          <input id="metaB2FileId" name="b2FileId" type="text" placeholder="fileId" required>
+
+          <label for="metaB2FileName">b2FileName (from step 1 publicId)</label>
+          <input id="metaB2FileName" name="b2FileName" type="text" placeholder="publicId" required>
+
+          <button type="submit" class="toggle-status">Create Video Metadata</button>
+          <p id="createVideoStatus" class="upload-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
   </div>
 
 <script src="../Services/env-config.js"></script>
@@ -59,6 +116,10 @@
   const usersTable = document.querySelector('.users-table');
   const loadingState = document.getElementById('loadingState');
   const logoutBtn = document.getElementById('logoutBtn');
+  const uploadFileForm = document.getElementById('uploadFileForm');
+  const createVideoForm = document.getElementById('createVideoForm');
+  const uploadFileStatus = document.getElementById('uploadFileStatus');
+  const createVideoStatus = document.getElementById('createVideoStatus');
 
   function getAuthHeaders() {
     const token = localStorage.getItem('token');
@@ -70,13 +131,18 @@
   }
 
   async function api(path, options = {}) {
+    const headers = {
+      ...getAuthHeaders(),
+      ...(options.headers || {})
+    };
+
+    if (!(options.body instanceof FormData) && !Object.prototype.hasOwnProperty.call(headers, 'Content-Type')) {
+      headers['Content-Type'] = 'application/json';
+    }
+
     const response = await fetch(`${BACKEND_URL}${path}`, {
       ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...getAuthHeaders(),
-        ...(options.headers || {})
-      }
+      headers
     });
 
     const data = await response.json().catch(() => ({}));
@@ -92,6 +158,107 @@
     }
 
     return data;
+  }
+
+  function setStatus(element, message, isError = false) {
+    element.textContent = message;
+    element.classList.toggle('error', isError);
+    element.classList.toggle('success', !isError);
+  }
+
+  async function handleUploadFile(event) {
+    event.preventDefault();
+
+    const formData = new FormData(uploadFileForm);
+    const videoFile = formData.get('video');
+
+    if (!(videoFile instanceof File) || !videoFile.name) {
+      setStatus(uploadFileStatus, 'Please select a video file first.', true);
+      return;
+    }
+
+    setStatus(uploadFileStatus, 'Uploading video file...');
+
+    try {
+      const data = await api('/api/dashboardinformation/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const fileId = data.fileId || data.b2FileId;
+      const publicId = data.publicId || data.b2FileName;
+
+      if (!fileId || !publicId) {
+        throw new Error('Upload succeeded but fileId/publicId are missing in response.');
+      }
+
+      document.getElementById('metaB2FileId').value = fileId;
+      document.getElementById('metaB2FileName').value = publicId;
+
+      const uploadedTitle = String(formData.get('title') || '').trim();
+      const uploadedSlug = String(formData.get('courseSlug') || '').trim();
+      const chapterOrder = String(formData.get('chapterOrder') || '').trim();
+
+      if (uploadedTitle && !document.getElementById('metaTitle').value.trim()) {
+        document.getElementById('metaTitle').value = uploadedTitle;
+      }
+
+      if (uploadedSlug && !document.getElementById('metaCourseSlug').value.trim()) {
+        document.getElementById('metaCourseSlug').value = uploadedSlug;
+      }
+
+      if (chapterOrder && !document.getElementById('metaOrder').value.trim()) {
+        document.getElementById('metaOrder').value = chapterOrder;
+      }
+
+      setStatus(uploadFileStatus, 'Upload successful. fileId/publicId copied into step 2 fields.');
+    } catch (error) {
+      setStatus(uploadFileStatus, error.message || 'Upload failed.', true);
+      if (error.message && error.message.toLowerCase().includes('session expired')) {
+        setTimeout(redirectToLogin, 700);
+      }
+    }
+  }
+
+  async function handleCreateVideo(event) {
+    event.preventDefault();
+
+    const payload = {
+      courseSlug: document.getElementById('metaCourseSlug').value.trim(),
+      title: document.getElementById('metaTitle').value.trim(),
+      b2FileId: document.getElementById('metaB2FileId').value.trim(),
+      b2FileName: document.getElementById('metaB2FileName').value.trim(),
+      order: Number(document.getElementById('metaOrder').value),
+      duration: Number(document.getElementById('metaDuration').value),
+      description: document.getElementById('metaDescription').value.trim()
+    };
+
+    if (!payload.courseSlug || !payload.title || !payload.b2FileId || !payload.b2FileName || !payload.description) {
+      setStatus(createVideoStatus, 'Please fill all required fields in step 2.', true);
+      return;
+    }
+
+    if (!Number.isFinite(payload.order) || payload.order < 1 || !Number.isFinite(payload.duration) || payload.duration < 1) {
+      setStatus(createVideoStatus, 'Order and duration must be valid numbers greater than 0.', true);
+      return;
+    }
+
+    setStatus(createVideoStatus, 'Creating video metadata...');
+
+    try {
+      await api('/api/admin/videos', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+
+      setStatus(createVideoStatus, 'Video created successfully. You can upload another one now.');
+      createVideoForm.reset();
+    } catch (error) {
+      setStatus(createVideoStatus, error.message || 'Failed to create video.', true);
+      if (error.message && error.message.toLowerCase().includes('session expired')) {
+        setTimeout(redirectToLogin, 700);
+      }
+    }
   }
 
   function renderUsers() {
@@ -181,6 +348,9 @@
     localStorage.removeItem('token');
     redirectToLogin();
   });
+
+  uploadFileForm.addEventListener('submit', handleUploadFile);
+  createVideoForm.addEventListener('submit', handleCreateVideo);
 
   loadClients();
 </script>
