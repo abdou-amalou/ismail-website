@@ -1,6 +1,7 @@
 (function () {
     const FALLBACK_URL = 'https://smail-back-ijbb.onrender.com';
     let apiUrl = FALLBACK_URL;
+    let courseSlug = '';
     let loadPromise = null;
 
     function parseEnv(text) {
@@ -21,6 +22,11 @@
 
             if (key === 'URL' && value) {
                 apiUrl = value;
+                continue;
+            }
+
+            if (key === 'COURSE_SLUG' && value) {
+                courseSlug = value;
             }
         }
     }
@@ -50,5 +56,6 @@
     window.ENV_CONFIG = {
         load,
         getApiBaseUrl: () => apiUrl,
+        getCourseSlug: () => courseSlug,
     };
 })();

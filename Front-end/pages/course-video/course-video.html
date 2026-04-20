@@ -50,9 +50,7 @@
 
     <script src="../../Services/env-config.js"></script>
     <script>
-        const FALLBACK_COURSE_SLUG = 'masterclasseditgn';
         const params = new URLSearchParams(window.location.search);
-        const courseSlug = params.get('courseSlug') || FALLBACK_COURSE_SLUG;
         const chapterOrderFromUrl = Number(params.get('chapterOrder') || 1);
         const videoIdFromUrl = params.get('videoId') || '';
 
@@ -212,6 +210,14 @@
         async function init() {
             try {
                 await window.ENV_CONFIG.load();
+                const courseSlug = params.get('courseSlug') || window.ENV_CONFIG.getCourseSlug();
+
+                if (!courseSlug) {
+                    chapterNameElement.textContent = 'Missing course slug';
+                    currentLessonLabel.textContent = 'Add COURSE_SLUG to Front-end/.env or pass ?courseSlug= in the URL.';
+                    return;
+                }
+
                 BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
 
                 const response = await fetch(`${BACKEND_URL}/api/courses/${encodeURIComponent(courseSlug)}`, {

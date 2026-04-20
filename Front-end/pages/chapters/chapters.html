@@ -16,8 +16,6 @@
 
     <script src="../../Services/env-config.js"></script>
     <script>
-        const FALLBACK_COURSE_SLUG = 'masterclasseditgn';
-
         function getToken() {
             return localStorage.getItem('token');
         }
@@ -177,10 +175,21 @@
 
         async function loadChaptersPage() {
             const params = new URLSearchParams(window.location.search);
-            const courseSlug = params.get('courseSlug') || FALLBACK_COURSE_SLUG;
+            await window.ENV_CONFIG.load();
+            const courseSlug = params.get('courseSlug') || window.ENV_CONFIG.getCourseSlug();
+
+            if (!courseSlug) {
+                const container = document.getElementById('chapters-container');
+                container.innerHTML = `
+                    <div class="chapter">
+                        <p class="chapter-title">Missing course slug</p>
+                        <p class="lessons">Add COURSE_SLUG to Front-end/.env or pass ?courseSlug= in the URL.</p>
+                    </div>
+                `;
+                return;
+            }
 
             try {
-                await window.ENV_CONFIG.load();
                 const BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
 
                 const response = await fetch(`${BACKEND_URL}/api/courses/${encodeURIComponent(courseSlug)}`, {
