@@ -56,13 +56,19 @@
       <div class="upload-grid">
         <form id="uploadFileForm" class="upload-form" novalidate>
           <h3>Step 1: Upload File</h3>
-          <p class="form-hint">Sends the raw video to backend upload route.</p>
+           <p class="form-hint">Collects the video metadata, then uploads the raw file to B2.</p>
 
           <label for="videoFile">Video File</label>
           <input id="videoFile" name="video" type="file" accept="video/*" required>
 
           <label for="uploadTitle">Title (optional)</label>
           <input id="uploadTitle" name="title" type="text" placeholder="Video 1">
+
+           <label for="uploadDescription">Description</label>
+           <textarea id="uploadDescription" name="description" rows="3" placeholder="Premiere video" required></textarea>
+
+           <label for="uploadOrder">Order</label>
+           <input id="uploadOrder" name="order" type="number" min="1" placeholder="1" required>
 
           <label for="uploadCourseSlug">Course Slug (optional)</label>
           <input id="uploadCourseSlug" name="courseSlug" type="text" placeholder="masterclasseditgn">
@@ -84,14 +90,14 @@
           <label for="metaTitle">Video Title</label>
           <input id="metaTitle" name="title" type="text" placeholder="Video 1" required>
 
+           <label for="metaDescription">Description</label>
+           <textarea id="metaDescription" name="description" rows="3" placeholder="Premiere video" required></textarea>
+
           <label for="metaOrder">Order</label>
           <input id="metaOrder" name="order" type="number" min="1" placeholder="1" required>
 
           <label for="metaDuration">Duration (seconds)</label>
           <input id="metaDuration" name="duration" type="number" min="1" placeholder="540" required>
-
-          <label for="metaDescription">Description</label>
-          <textarea id="metaDescription" name="description" rows="3" placeholder="Premiere video" required></textarea>
 
           <label for="metaB2FileId">b2FileId (from step 1 fileId)</label>
           <input id="metaB2FileId" name="b2FileId" type="text" placeholder="fileId" required>
@@ -374,7 +380,10 @@
         <tr>
           <td>${course.title || '-'}</td>
           <td>${course.slug || '-'}</td>
-          <td><button class="toggle-status" data-action="delete-course" data-id="${id}">Delete</button></td>
+          <td class="actions-cell">
+            <button class="toggle-status" data-action="edit-course" data-id="${id}">Edit</button>
+            <button class="toggle-status" data-action="delete-course" data-id="${id}">Delete</button>
+          </td>
         </tr>
       `;
     }).join('');
@@ -395,7 +404,10 @@
         <tr>
           <td>${chapter.order ?? '-'}</td>
           <td>${chapter.title || '-'}</td>
-          <td><button class="toggle-status" data-action="delete-chapter" data-id="${id}">Delete</button></td>
+          <td class="actions-cell">
+            <button class="toggle-status" data-action="edit-chapter" data-id="${id}">Edit</button>
+            <button class="toggle-status" data-action="delete-chapter" data-id="${id}">Delete</button>
+          </td>
         </tr>
       `;
     }).join('');
@@ -559,6 +571,48 @@
   }
 
   async function handleCourseActions(event) {
+    const editButton = event.target.closest('button[data-action="edit-course"]');
+    if (editButton) {
+      const courseId = editButton.dataset.id;
+      const selectedCourse = courses.find((course) => String(getItemId(course)) === String(courseId));
+      if (!selectedCourse) {
+        return;
+      }
+
+      const nextTitle = window.prompt('Course title', selectedCourse.title || '');
+      if (nextTitle === null) {
+        return;
+      }
+
+      const nextSlug = window.prompt('Course slug', selectedCourse.slug || '');
+      if (nextSlug === null) {
+        return;
+      }
+
+      const nextDescription = window.prompt('Course description', selectedCourse.description || '');
+      if (nextDescription === null) {
+        return;
+      }
+
+      try {
+        await api(`/api/admin/courses/${courseId}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            title: nextTitle.trim(),
+            slug: nextSlug.trim(),
+            description: nextDescription.trim()
+          })
+        });
+
+        setStatus(manageStatus, 'Course updated successfully.');
+        await loadCourses();
+      } catch (error) {
+        setStatus(manageStatus, error.message || 'Failed to update course.', true);
+      }
+
+      return;
+    }
+
     const button = event.target.closest('button[data-action="delete-course"]');
     if (!button) {
       return;
@@ -583,6 +637,48 @@
   }
 
   async function handleChapterActions(event) {
+    const editButton = event.target.closest('button[data-action="edit-chapter"]');
+    if (editButton) {
+      const chapterId = editButton.dataset.id;
+      const selectedChapter = chapters.find((chapter) => String(getItemId(chapter)) === String(chapterId));
+      if (!selectedChapter) {
+        return;
+      }
+
+      const nextTitle = window.prompt('Chapter title', selectedChapter.title || '');
+      if (nextTitle === null) {
+        return;
+      }
+
+      const nextOrder = window.prompt('Chapter order', String(selectedChapter.order ?? 1));
+      if (nextOrder === null) {
+        return;
+      }
+
+      const nextDescription = window.prompt('Chapter description', selectedChapter.description || '');
+      if (nextDescription === null) {
+        return;
+      }
+
+      try {
+        await api(`/api/admin/chapters/${chapterId}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            title: nextTitle.trim(),
+            order: Number(nextOrder),
+            description: nextDescription.trim()
+          })
+        });
+
+        setStatus(manageStatus, 'Chapter updated successfully.');
+        await loadChaptersForCourse(manageCourseSelect.value);
+      } catch (error) {
+        setStatus(manageStatus, error.message || 'Failed to update chapter.', true);
+      }
+
+      return;
+    }
+
     const button = event.target.closest('button[data-action="delete-chapter"]');
     if (!button) {
       return;
@@ -657,7 +753,7 @@
     setStatus(uploadFileStatus, 'Uploading video file...');
 
     try {
-      const data = await api('/api/dashboardinformation/upload', {
+      const data = await api('/api/admin/upload', {
         method: 'POST',
         body: formData
       });
@@ -673,11 +769,21 @@
       document.getElementById('metaB2FileName').value = publicId;
 
       const uploadedTitle = String(formData.get('title') || '').trim();
+      const uploadedDescription = String(formData.get('description') || '').trim();
+      const uploadedOrder = String(formData.get('order') || '').trim();
       const uploadedSlug = String(formData.get('courseSlug') || '').trim();
       const chapterOrder = String(formData.get('chapterOrder') || '').trim();
 
       if (uploadedTitle && !document.getElementById('metaTitle').value.trim()) {
         document.getElementById('metaTitle').value = uploadedTitle;
+      }
+
+      if (uploadedDescription && !document.getElementById('metaDescription').value.trim()) {
+        document.getElementById('metaDescription').value = uploadedDescription;
+      }
+
+      if (uploadedOrder && !document.getElementById('metaOrder').value.trim()) {
+        document.getElementById('metaOrder').value = uploadedOrder;
       }
 
       if (uploadedSlug && !document.getElementById('metaCourseSlug').value.trim()) {
