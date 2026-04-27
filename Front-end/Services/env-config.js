@@ -28,11 +28,6 @@
         return Object.prototype.hasOwnProperty.call(obj, key);
     }
 
-    function isLocalHost() {
-        const host = window.location.hostname || '';
-        return host === 'localhost' || host === '127.0.0.1';
-    }
-
     function getNonEmptyValue(parsed, key) {
         if (!hasKey(parsed, key)) {
             return '';
@@ -64,33 +59,7 @@
             }
         }
 
-        const backUrl = getNonEmptyValue(parsed, 'BACK_URL');
-        const backUrlLocal = getNonEmptyValue(parsed, 'BACK_URL_LOCAL');
-        const backUrlProd = getNonEmptyValue(parsed, 'BACK_URL_PROD');
-        const backUrlFallback = getNonEmptyValue(parsed, 'BACK_URL_FALLBACK') || getNonEmptyValue(parsed, 'FALLBACK_URL');
-        const legacyUrl = getNonEmptyValue(parsed, 'URL');
-
-        if (backUrl) {
-            apiUrl = backUrl;
-            return;
-        }
-
-        if (isLocalHost() && backUrlLocal) {
-            apiUrl = backUrlLocal;
-            return;
-        }
-
-        if (!isLocalHost() && backUrlProd) {
-            apiUrl = backUrlProd;
-            return;
-        }
-
-        if (backUrlFallback) {
-            apiUrl = backUrlFallback;
-            return;
-        }
-
-        apiUrl = legacyUrl;
+        apiUrl = getNonEmptyValue(parsed, 'URL');
     }
 
     function authHeaders() {
