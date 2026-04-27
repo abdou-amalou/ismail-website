@@ -218,7 +218,7 @@
                     return;
                 }
 
-                BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
+                BACKEND_URL = window.ENV_CONFIG.requireApiBaseUrl();
 
                 const response = await fetch(`${BACKEND_URL}/api/courses/${encodeURIComponent(courseSlug)}`, {
                     method: 'GET',

@@ -55,7 +55,7 @@
     <script>
         async function getApiBaseUrl() {
             await window.ENV_CONFIG.load();
-            return window.ENV_CONFIG.getApiBaseUrl();
+            return window.ENV_CONFIG.requireApiBaseUrl();
         }
 
         function getTokenFromUrl() {

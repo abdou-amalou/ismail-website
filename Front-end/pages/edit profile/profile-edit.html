@@ -227,7 +227,7 @@
         // Load user data on page load
         document.addEventListener('DOMContentLoaded', async function() {
             await window.ENV_CONFIG.load();
-            BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
+            BACKEND_URL = window.ENV_CONFIG.requireApiBaseUrl();
             await loadUserData();
             setupModalHandlers();
             setupFormHandlers();

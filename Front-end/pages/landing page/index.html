@@ -676,7 +676,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             await window.ENV_CONFIG.load();
-            const BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
+            const BACKEND_URL = window.ENV_CONFIG.requireApiBaseUrl();
             const token = localStorage.getItem('token');
             const DEFAULT_PROFILE_PICTURE = '../../image/landing-page-pictures/no user picture.png';
             

@@ -62,12 +62,22 @@
         apiUrl = getNonEmptyValue(parsed, 'URL');
     }
 
+    function requireApiBaseUrl() {
+        const resolved = normalizeUrl(apiUrl);
+        if (!resolved) {
+            throw new Error('Missing backend URL. Set URL in Front-end/.env');
+        }
+
+        return resolved;
+    }
+
     function authHeaders() {
         const token = localStorage.getItem('token');
         return token ? { Authorization: `Bearer ${token}` } : {};
     }
 
     async function api(path, options) {
+        const baseUrl = requireApiBaseUrl();
         const requestOptions = options || {};
         const headers = {
             ...(requestOptions.headers || {}),
@@ -78,7 +88,7 @@
             headers['Content-Type'] = 'application/json';
         }
 
-        const res = await fetch(`${apiUrl}${path}`, {
+        const res = await fetch(`${baseUrl}${path}`, {
             ...requestOptions,
             headers,
         });
@@ -116,6 +126,7 @@
     window.ENV_CONFIG = {
         load,
         getApiBaseUrl: () => apiUrl,
+        requireApiBaseUrl,
         getCourseSlug: () => courseSlug,
         getRoutePrefixes: () => ({ ...ROUTE_PREFIXES }),
     };

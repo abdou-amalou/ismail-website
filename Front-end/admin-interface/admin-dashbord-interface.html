@@ -905,7 +905,7 @@
   async function loadClients() {
     try {
       await window.ENV_CONFIG.load();
-      BACKEND_URL = window.ENV_CONFIG.getApiBaseUrl();
+      BACKEND_URL = window.ENV_CONFIG.requireApiBaseUrl();
 
       if (!localStorage.getItem('token')) {
         redirectToLogin();
