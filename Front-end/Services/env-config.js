@@ -65,7 +65,9 @@
     function requireApiBaseUrl() {
         const resolved = normalizeUrl(apiUrl);
         if (!resolved) {
-            throw new Error('Missing backend URL. Set URL in Front-end/.env');
+            const configError = new Error('Service unavailable. Please try again later.');
+            configError.code = 'CONFIG_URL_MISSING';
+            throw configError;
         }
 
         return resolved;
