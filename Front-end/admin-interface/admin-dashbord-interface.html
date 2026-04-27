@@ -753,7 +753,7 @@
     setStatus(uploadFileStatus, 'Uploading video file...');
 
     try {
-      const data = await api('/api/admin/upload', {
+      const data = await api('/api/dashboardinformation/upload', {
         method: 'POST',
         body: formData
       });
