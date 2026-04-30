@@ -52,11 +52,30 @@
     function readConfigFromProcessEnv() {
         const env = getProcessEnv();
 
-        apiUrl = getNonEmptyValue(env, 'URL');
+        apiUrl =
+            getNonEmptyValue(env, 'URL') ||
+            getNonEmptyValue(env, 'BACK_URL') ||
+            getNonEmptyValue(env, 'VITE_URL') ||
+            getNonEmptyValue(env, 'NEXT_PUBLIC_URL');
 
         const slug = String(env.COURSE_SLUG || '').trim();
         if (slug) {
             courseSlug = slug;
+        }
+
+        if (!apiUrl && typeof document !== 'undefined') {
+            const metaApi = document.querySelector('meta[name="api-base-url"]');
+            if (metaApi) {
+                apiUrl = normalizeUrl(metaApi.getAttribute('content'));
+            }
+        }
+
+        if (!apiUrl && typeof localStorage !== 'undefined') {
+            apiUrl = normalizeUrl(localStorage.getItem('apiBaseUrl'));
+        }
+
+        if (!apiUrl && typeof window !== 'undefined' && window.location) {
+            apiUrl = normalizeUrl(window.location.origin);
         }
     }
 
