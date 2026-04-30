@@ -4,7 +4,7 @@ This frontend is configured to match the backend API contract documented for aut
 
 ## 1) Base URL Configuration
 
-Edit `Front-end/.env`:
+Set the Vercel environment variables used by `api/env.js`:
 
 ```env
 BACK_URL=
@@ -17,12 +17,10 @@ COURSE_SLUG=
 
 Behavior in `Services/env-config.js`:
 
-- `BACK_URL` has highest priority (works for local or production).
-- If `BACK_URL` is absent:
-- local host uses `BACK_URL_LOCAL`.
-- non-local host uses `BACK_URL_PROD`.
-- if none found, falls back to `BACK_URL_FALLBACK` (or `FALLBACK_URL`).
-- legacy `URL` is used only if other keys are empty.
+- `Services/env-config.js` reads values from `window.process.env`.
+- `api/env.js` injects the Vercel environment variables into `window.process.env`.
+- `URL` has highest priority for the shared API base URL.
+- If `URL` is empty, `BACK_URL`, `VITE_URL`, or `NEXT_PUBLIC_URL` can be used.
 
 ## 2) Shared API Client
 

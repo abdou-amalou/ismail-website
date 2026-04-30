@@ -48,6 +48,7 @@
         </div>
     </div>
 
+    <script src="/api/env.js"></script>
     <script src="../../Services/env-config.js"></script>
     <script>
         const params = new URLSearchParams(window.location.search);
@@ -214,7 +215,7 @@
 
                 if (!courseSlug) {
                     chapterNameElement.textContent = 'Missing course slug';
-                    currentLessonLabel.textContent = 'Add COURSE_SLUG to Front-end/.env or pass ?courseSlug= in the URL.';
+                    currentLessonLabel.textContent = 'Set COURSE_SLUG in your Vercel environment variables or pass ?courseSlug= in the URL.';
                     return;
                 }
 

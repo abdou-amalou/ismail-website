@@ -14,6 +14,7 @@
     <div class="chapters" id="chapters-container"></div>
     <a href="../landing page/index.html"><p class = "home-button">Home</p></a>
 
+    <script src="/api/env.js"></script>
     <script src="../../Services/env-config.js"></script>
     <script>
         function getToken() {
@@ -183,7 +184,7 @@
                 container.innerHTML = `
                     <div class="chapter">
                         <p class="chapter-title">Missing course slug</p>
-                        <p class="lessons">Add COURSE_SLUG to Front-end/.env or pass ?courseSlug= in the URL.</p>
+                        <p class="lessons">Set COURSE_SLUG in your Vercel environment variables or pass ?courseSlug= in the URL.</p>
                     </div>
                 `;
                 return;
