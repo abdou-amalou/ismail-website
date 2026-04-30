@@ -36,30 +36,28 @@
         return normalizeUrl(parsed[key]);
     }
 
-    function parseEnv(text) {
-        const parsed = {};
-        const lines = text.split(/\r?\n/);
-        for (const rawLine of lines) {
-            const line = rawLine.trim();
-            if (!line || line.startsWith('#')) {
-                continue;
-            }
-
-            const idx = line.indexOf('=');
-            if (idx === -1) {
-                continue;
-            }
-
-            const key = line.slice(0, idx).trim();
-            const value = line.slice(idx + 1).trim().replace(/^['\"]|['\"]$/g, '');
-            parsed[key] = value;
-
-            if (key === 'COURSE_SLUG' && value) {
-                courseSlug = value;
-            }
+    function getProcessEnv() {
+        if (typeof globalThis === 'undefined') {
+            return {};
         }
 
-        apiUrl = getNonEmptyValue(parsed, 'URL');
+        const proc = globalThis.process;
+        if (!proc || typeof proc !== 'object' || !proc.env || typeof proc.env !== 'object') {
+            return {};
+        }
+
+        return proc.env;
+    }
+
+    function readConfigFromProcessEnv() {
+        const env = getProcessEnv();
+
+        apiUrl = getNonEmptyValue(env, 'URL');
+
+        const slug = String(env.COURSE_SLUG || '').trim();
+        if (slug) {
+            courseSlug = slug;
+        }
     }
 
     function requireApiBaseUrl() {
@@ -109,15 +107,7 @@
         }
 
         loadPromise = (async () => {
-            try {
-                const response = await fetch('/.env', { cache: 'no-store' });
-                if (response.ok) {
-                    const content = await response.text();
-                    parseEnv(content);
-                }
-            } catch (error) {
-                // Keep currently resolved URL when .env is not reachable.
-            }
+            readConfigFromProcessEnv();
 
             return apiUrl;
         })();
